@@ -16,6 +16,18 @@ void draw(NodeDrawable *node) {
     }
 }
 
+void clear_drawlist() {
+    NodeDrawable *current = drawlist.root;
+    while(current != NULL) {
+        NodeDrawable *next = current->next;
+        free(current->drawable);  // Free the TextItem (or other drawable)
+        free(current);            // Then free the node itself
+        current = next;
+    }
+    drawlist.count = 0;
+    drawlist.root = NULL;
+}
+
 void add_drawable(void *drawable, char type) {
     if(drawlist.count == 0) {
         drawlist.count++;

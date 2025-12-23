@@ -45,6 +45,8 @@ void UpdateDrawFrame(void)
         node = node->next;
     }
 
+    clear_drawlist();
+
     #ifndef PRODUCTION
         DrawFPS(10, 10); // DEBUG
     #endif
@@ -82,10 +84,11 @@ int main(void)
         lua_pop(globalLuaState, 1);
     }
 
+    SetTargetFPS(60);
+
 #if defined(PLATFORM_WEB)
     emscripten_set_main_loop(UpdateDrawFrame, 0, 1);
 #else
-    SetTargetFPS(60);
     while (!WindowShouldClose())
     {
         UpdateDrawFrame();

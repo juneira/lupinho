@@ -9,6 +9,7 @@
 Drawlist Functions
 */
 void draw(NodeDrawable *node);
+void clear_drawlist();
 void add_drawable(void *drawable, char type);
 void add_text(char *text_s, int x, int y);
 void draw_text(TextItem *text);

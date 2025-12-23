@@ -21,7 +21,7 @@ CFLAGS = -Wall -std=c99 -D_DEFAULT_SOURCE -Wno-missing-braces
 
 # Emscripten Web Flags
 EMFLAGS = -s USE_GLFW=3
-EMFLAGS += -s ASYNCIFY
+# Note: ASYNCIFY removed - not needed and causes ~50% performance overhead
 EMFLAGS += -s TOTAL_MEMORY=67108864
 EMFLAGS += -s FORCE_FILESYSTEM=1
 EMFLAGS += --shell-file libs/raylib-web/minshell.html
