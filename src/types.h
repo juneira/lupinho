@@ -2,24 +2,26 @@
 #include <string.h>
 
 #define MAX_TEXT_LENGTH 100
-#define MAX_TEXTS 100
 
-// List Objects
-struct NodeObject {
-    void *object;
-    struct NodeObject *next;
-};
-
-typedef struct Drawable {
-    void (*draw)(void);
-};
-
+// Text
 typedef struct {
-    Drawable drawable;
-    char text[MAX_TEXT_LENGTH];
+    char *text;
     int x;
     int y;
     int fontSize;
     Color color;
-    bool active;
 } TextItem;
+
+// List Objects
+typedef struct NodeDrawable NodeDrawable;
+
+struct NodeDrawable{
+    char type;
+    void *drawable;
+    NodeDrawable *next;
+};
+
+typedef struct {
+    int count;
+    NodeDrawable *root;
+} Drawlist;

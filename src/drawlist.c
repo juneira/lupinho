@@ -5,44 +5,76 @@
 #include <lualib.h>
 #include <lauxlib.h>
 
-/**
-Global objects
-**/
-extern TextItem texts[MAX_TEXTS];
-extern int textCount;
+#include <stdlib.h>
 
-//----------------------------------------------------------------------------------
-// Função Lua: escreva(texto, x, y, tamanho)
-// Adiciona um texto para ser desenhado na tela
-//----------------------------------------------------------------------------------
-int lua_escreva(lua_State *L) {
-    const char *text = luaL_checkstring(L, 1);
-    int x = luaL_optinteger(L, 2, 10);
-    int y = luaL_optinteger(L, 3, 10);
-    int fontSize = luaL_optinteger(L, 4, 20);
+/*
+Global vars
+*/
+extern Drawlist drawlist;
 
-    if (textCount < MAX_TEXTS) {
-        strncpy(texts[textCount].text, text, MAX_TEXT_LENGTH - 1);
-        texts[textCount].text[MAX_TEXT_LENGTH - 1] = '\0';
-        texts[textCount].x = x;
-        texts[textCount].y = y;
-        texts[textCount].fontSize = fontSize;
-        texts[textCount].color = DARKGRAY;
-        texts[textCount].active = true;
-        textCount++;
+void add_text(char *text_s, int x, int y);
+void draw_text(TextItem *text);
+
+/*
+Drawable Functions
+*/
+void draw(NodeDrawable *node) {
+    if(node->type == 't') {
+        draw_text((TextItem *) node->drawable);
+    }
+}
+
+void add_drawable(void *drawable, char type) {
+    if(drawlist.count == 0) {
+        drawlist.count++;
+
+        NodeDrawable *node = (NodeDrawable *) malloc(sizeof(NodeDrawable));
+        drawlist.root = node;
+        node->drawable = drawable;
+        node->type = type;
+        node->next = NULL;
+        return;
     }
 
-    return 0;
+    drawlist.count++;
+
+    NodeDrawable *current = drawlist.root;
+    for(; current->next != NULL; current = current->next) {}
+
+    NodeDrawable *node = (NodeDrawable *) malloc(sizeof(NodeDrawable));
+    current->next = node;
+    node->next = NULL;
+    node->drawable = drawable;
+    node->type = type;
+}
+
+/**
+Text Functions
+**/
+void add_text(char *text_s, int x, int y) {
+    TextItem *text = (TextItem *) malloc(sizeof(TextItem));
+    text->text = text_s;
+    text->x = x;
+    text->y = y;
+    text->fontSize = 20;
+    text->color = DARKGRAY;
+
+    add_drawable(text, 't');
+}
+
+void draw_text(TextItem *text) {
+    DrawText(text->text, text->x, text->y, text->fontSize, text->color);
 }
 
 //----------------------------------------------------------------------------------
-// Função Lua: limpar_textos()
-// Remove todos os textos da tela
+// ui.draw_text(texto:string, x:int, y:int)
 //----------------------------------------------------------------------------------
-int lua_limpar_textos(lua_State *L) {
-    textCount = 0;
-    for (int i = 0; i < MAX_TEXTS; i++) {
-        texts[i].active = false;
-    }
+int lua_escreva(lua_State *L) {
+    char *text = luaL_checkstring(L, 1);
+    int x = luaL_optinteger(L, 2, 10);
+    int y = luaL_optinteger(L, 3, 10);
+
+    add_text(text, x, y);
+
     return 0;
 }

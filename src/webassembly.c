@@ -8,17 +8,21 @@
 /**
 Global objects
 **/
-TextItem texts[MAX_TEXTS];
-int textCount = 0;
+Drawlist drawlist;
+lua_State *globalLuaState = NULL;
+
+/**
+Constants
+**/
+const int screenWidth = 800;
+const int screenHeight = 450;
+
+extern void draw(NodeDrawable *);
+
 
 #if defined(PLATFORM_WEB)
     #include <emscripten/emscripten.h>
 #endif
-
-const int screenWidth = 800;
-const int screenHeight = 450;
-
-lua_State *globalLuaState = NULL;
 
 void UpdateDrawFrame(void)
 {
@@ -38,11 +42,11 @@ void UpdateDrawFrame(void)
 
     ClearBackground(RAYWHITE);
 
-    for (int i = 0; i < textCount; i++) {
-        if (texts[i].active) {
-            DrawText(texts[i].text, texts[i].x, texts[i].y,
-                    texts[i].fontSize, texts[i].color);
-        }
+    NodeDrawable *node = drawlist.root;
+
+    for (int i = 0; i < drawlist.count; i++) {
+        draw(node);
+        node = node->next;
     }
 
     #ifndef PRODUCTION
@@ -62,9 +66,6 @@ int main(void)
 
     lua_pushcfunction(globalLuaState, lua_escreva);
     lua_setfield(globalLuaState, -2, "escreva");
-
-    lua_pushcfunction(globalLuaState, lua_limpar_textos);
-    lua_setfield(globalLuaState, -2, "limpar_textos");
 
     lua_setglobal(globalLuaState, "ui");
 
