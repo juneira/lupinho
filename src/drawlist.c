@@ -21,6 +21,9 @@ void draw(NodeDrawable *node) {
         case 'r':
             draw_rect((RectItem *) node->drawable);
             break;
+        case 'c':
+            draw_circle((CircleItem *) node->drawable);
+            break;
     }
 }
 
@@ -116,5 +119,31 @@ void draw_rect(RectItem *rect) {
         DrawRectangle(rect->x, rect->y, rect->width, rect->height, rect->color);
     } else {
         DrawRectangleLines(rect->x, rect->y, rect->width, rect->height, rect->color);
+    }
+}
+
+/**
+Circle Functions
+**/
+void add_circle(int center_x, int center_y, int radius, bool filled, Color color, bool has_border, Color border_color) {
+    CircleItem *circle = (CircleItem *) malloc(sizeof(CircleItem));
+    circle->center_x = center_x;
+    circle->center_y = center_y;
+    circle->radius = radius;
+    circle->filled = filled;
+    circle->color = color;
+    circle->has_border = has_border;
+    circle->border_color = border_color;
+
+    add_drawable(circle, 'c');
+}
+
+void draw_circle(CircleItem *circle) {
+    if(circle->filled) {
+        DrawCircle(circle->center_x, circle->center_y, circle->radius, circle->color);
+    }
+
+    if(circle->has_border) {
+        DrawCircleLines(circle->center_x, circle->center_y, circle->radius, circle->border_color);
     }
 }

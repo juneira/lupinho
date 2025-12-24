@@ -31,6 +31,17 @@ typedef struct {
     Color color;
 } RectItem;
 
+// Circle
+typedef struct {
+    int center_x;
+    int center_y;
+    int radius;
+    bool filled;
+    bool has_border;
+    Color border_color;
+    Color color;
+} CircleItem;
+
 // List Objects
 typedef struct NodeDrawable NodeDrawable;
 

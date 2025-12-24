@@ -47,3 +47,20 @@ int lua_draw_rect(lua_State *L) {
 
     return 0;
 }
+
+//----------------------------------------------------------------------------------
+// ui.draw_circle(centro_x:int, centro_y:int, raio:int, prenchido:bool, cor:int, borda:bool, cor:int)
+//----------------------------------------------------------------------------------
+int lua_draw_circle(lua_State *L) {
+    int centro_x = luaL_checkinteger(L, 1);
+    int centro_y = luaL_checkinteger(L, 2);
+    int raio = luaL_checkinteger(L, 3);
+    bool prenchido = lua_toboolean(L, 4);
+    int cor = luaL_checkinteger(L, 5);
+    bool borda = lua_toboolean(L, 6);
+    int cor_borda = luaL_checkinteger(L, 7);
+
+    add_circle(centro_x, centro_y, raio, prenchido, DARKGRAY, borda, RED);
+
+    return 0;
+}

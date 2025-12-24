@@ -14,4 +14,7 @@ function update()
     ui.draw_line(10, 10, 280, 180, 1)
     ui.draw_rect(50, 50, 80, 80, true, 1)
     ui.draw_rect(185, 185, 50, 50, false, 1)
+    ui.draw_circle(200, 300, 20, true, 1, true, 0)
+    ui.draw_circle(260, 300, 20, true, 1, false, 0)
+    ui.draw_circle(200, 360, 20, false, 1, true, 0)
 end
