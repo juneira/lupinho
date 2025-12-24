@@ -2,6 +2,8 @@
 
 **Lupinho** is a web-based emulator for **Lupi**, a Brazilian game console. It runs directly in your browser using WebAssembly, allowing you to write and play games using a simple Lua scripting API.
 
+### 🕹️ [Try the Demo](https://lupinho.kaninde.app/)
+
 ## ✨ Features
 
 - 🌐 **Browser-based** — Runs on WebAssembly, no installation required
