@@ -27,7 +27,7 @@ int lua_draw_line(lua_State *L) {
     int y2 = luaL_checkinteger(L, 4);
     int cor = luaL_checkinteger(L, 5);
 
-    add_line(x1, y1, x2, y2, DARKGRAY);
+    add_line(x1, y1, x2, y2, get_palette_color(cor));
 
     return 0;
 }
@@ -43,7 +43,7 @@ int lua_draw_rect(lua_State *L) {
     bool prenchido = lua_toboolean(L, 5);
     int cor = luaL_checkinteger(L, 6);
 
-    add_rect(x, y, largura, altura, prenchido, DARKGRAY);
+    add_rect(x, y, largura, altura, prenchido, get_palette_color(cor));
 
     return 0;
 }
@@ -60,7 +60,7 @@ int lua_draw_circle(lua_State *L) {
     bool borda = lua_toboolean(L, 6);
     int cor_borda = luaL_checkinteger(L, 7);
 
-    add_circle(centro_x, centro_y, raio, prenchido, DARKGRAY, borda, RED);
+    add_circle(centro_x, centro_y, raio, prenchido, get_palette_color(cor), borda, get_palette_color(cor_borda));
 
     return 0;
 }
@@ -77,7 +77,19 @@ int lua_draw_triangle(lua_State *L) {
     int p3_y = luaL_checkinteger(L, 6);
     int cor = luaL_checkinteger(L, 7);
 
-    add_triangle(p1_x, p1_y, p2_x, p2_y, p3_x, p3_y, DARKGRAY);
+    add_triangle(p1_x, p1_y, p2_x, p2_y, p3_x, p3_y, get_palette_color(cor));
+
+    return 0;
+}
+
+//----------------------------------------------------------------------------------
+// ui.palset(posicao:int, cor:int)
+//----------------------------------------------------------------------------------
+int lua_palset(lua_State *L) {
+    int posicao = luaL_checkinteger(L, 1);
+    int cor = luaL_checkinteger(L, 2);
+
+    palset(posicao, cor);
 
     return 0;
 }

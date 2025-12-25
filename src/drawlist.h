@@ -28,6 +28,14 @@ void add_triangle(int p1_x, int p1_y, int p2_x, int p2_y, int p3_x, int p3_y, Co
 void draw_triangle(TriangleItem *triangle);
 
 /*
+Palette Functions
+*/
+#define PALETTE_SIZE 256
+extern Color palette[PALETTE_SIZE];
+void palset(int position, int bgr555);
+Color get_palette_color(int index);
+
+/*
 Lua Functions
 */
 int lua_draw_text(lua_State *L);
@@ -35,4 +43,5 @@ int lua_draw_line(lua_State *L);
 int lua_draw_rect(lua_State *L);
 int lua_draw_circle(lua_State *L);
 int lua_draw_triangle(lua_State *L);
+int lua_palset(lua_State *L);
 #endif

@@ -77,6 +77,9 @@ int main(void)
     lua_pushcfunction(globalLuaState, lua_draw_triangle);
     lua_setfield(globalLuaState, -2, "draw_triangle");
 
+    lua_pushcfunction(globalLuaState, lua_palset);
+    lua_setfield(globalLuaState, -2, "palset");
+
     lua_setglobal(globalLuaState, "ui");
 
     InitWindow(screenWidth, screenHeight, "Lupi Emulator");

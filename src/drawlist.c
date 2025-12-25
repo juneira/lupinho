@@ -7,6 +7,7 @@
 Global vars
 */
 extern Drawlist drawlist;
+Color palette[PALETTE_SIZE];
 
 /*
 Drawable Functions
@@ -174,4 +175,29 @@ void draw_triangle(TriangleItem *triangle) {
     Vector2 v3 = { triangle->p3_x, triangle->p3_y };
 
     DrawTriangle(v1, v3, v2, triangle->color);
+}
+
+/**
+Palette Functions
+**/
+void palset(int position, int bgr555) {
+    if (position < 0 || position >= PALETTE_SIZE) return;
+
+    // Extract BGR555 components (5 bits each)
+    int r5 = (bgr555 >> 0) & 0x1F;
+    int g5 = (bgr555 >> 5) & 0x1F;
+    int b5 = (bgr555 >> 10) & 0x1F;
+
+    // Scale from 5-bit (0-31) to 8-bit (0-255)
+    palette[position].r = (r5 << 3) | (r5 >> 2);
+    palette[position].g = (g5 << 3) | (g5 >> 2);
+    palette[position].b = (b5 << 3) | (b5 >> 2);
+    palette[position].a = 255;
+}
+
+Color get_palette_color(int index) {
+    if (index >= 0 && index < PALETTE_SIZE) {
+        return palette[index];
+    }
+    return DARKGRAY; // fallback
 }
