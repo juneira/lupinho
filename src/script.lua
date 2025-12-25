@@ -1,7 +1,5 @@
-function init()
-    x = 200
-    t = 0
-end
+x = 200
+t = 0
 
 function update()
     x = x + 4

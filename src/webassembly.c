@@ -86,16 +86,6 @@ int main(void)
         lua_pop(globalLuaState, 1);
     }
 
-    lua_getglobal(globalLuaState, "init");
-    if (lua_isfunction(globalLuaState, -1)) {
-        if (lua_pcall(globalLuaState, 0, 0, 0) != LUA_OK) {
-            fprintf(stderr, "Erro em init(): %s\n", lua_tostring(globalLuaState, -1));
-            lua_pop(globalLuaState, 1);
-        }
-    } else {
-        lua_pop(globalLuaState, 1);
-    }
-
     SetTargetFPS(60);
 
 #if defined(PLATFORM_WEB)
