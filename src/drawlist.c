@@ -29,6 +29,9 @@ void draw(NodeDrawable *node) {
         case 'v':
             draw_triangle((TriangleItem *) node->drawable);
             break;
+        case 's':
+            draw_tile((TileItem *) node->drawable);
+            break;
     }
 }
 
@@ -175,6 +178,53 @@ void draw_triangle(TriangleItem *triangle) {
     Vector2 v3 = { triangle->p3_x, triangle->p3_y };
 
     DrawTriangle(v1, v3, v2, triangle->color);
+}
+
+/**
+Tile Functions
+**/
+extern SpriteItem sprite_sheet[MAX_SPRITE_SHEETS];
+
+void add_tile(int spritesheet, int tile_index, int x, int y) {
+    TileItem *tile = (TileItem *) malloc(sizeof(TileItem));
+    tile->spritesheet = spritesheet;
+    tile->tile_index = tile_index;
+    tile->x = x;
+    tile->y = y;
+
+    add_drawable(tile, 's');
+}
+
+void draw_tile(TileItem *tile) {
+    if (tile->spritesheet < 0 || tile->spritesheet >= MAX_SPRITE_SHEETS) {
+        return;
+    }
+
+    SpriteItem *sprite = &sprite_sheet[tile->spritesheet];
+    if (sprite->width == 0 || sprite->height == 0) {
+        return;
+    }
+
+    int tile_width = sprite->width;
+    int tile_height = sprite->height;
+    int pixels_per_tile = tile_width * tile_height;
+    int start_pixel = tile->tile_index * pixels_per_tile;
+
+    // Draw each pixel of the tile
+    for (int py = 0; py < tile_height; py++) {
+        for (int px = 0; px < tile_width; px++) {
+            int pixel_index = start_pixel + py * tile_width + px;
+            if (pixel_index >= MAX_TILES_PER_SPRITE) break;
+
+            int palette_idx = sprite->pallet_index[pixel_index];
+            Color color = get_palette_color(palette_idx);
+
+            // Skip transparent pixels (palette index 0)
+            if (palette_idx != 0) {
+                DrawPixel(tile->x + px, tile->y + py, color);
+            }
+        }
+    }
 }
 
 /**

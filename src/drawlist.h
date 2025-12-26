@@ -27,6 +27,9 @@ void draw_circle(CircleItem *circle);
 void add_triangle(int p1_x, int p1_y, int p2_x, int p2_y, int p3_x, int p3_y, Color color);
 void draw_triangle(TriangleItem *triangle);
 
+void add_tile(int spritesheet, int tile_index, int x, int y);
+void draw_tile(TileItem *tile);
+
 /*
 Palette Functions
 */
@@ -44,4 +47,6 @@ int lua_draw_rect(lua_State *L);
 int lua_draw_circle(lua_State *L);
 int lua_draw_triangle(lua_State *L);
 int lua_palset(lua_State *L);
+int lua_tile(lua_State *L);
+int lua_require_sprites(lua_State *L);
 #endif

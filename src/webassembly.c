@@ -1,4 +1,5 @@
 #include "drawlist.h"
+#include "sprite_loader.h"
 
 #include <lua.h>
 #include <lualib.h>
@@ -9,6 +10,10 @@ Global objects
 **/
 Drawlist drawlist;
 lua_State *globalLuaState = NULL;
+
+// Sprite system globals
+int sprit_current_index = 0;
+SpriteItem sprite_sheet[MAX_SPRITE_SHEETS];
 
 /**
 Constants
@@ -80,9 +85,15 @@ int main(void)
     lua_pushcfunction(globalLuaState, lua_palset);
     lua_setfield(globalLuaState, -2, "palset");
 
+    lua_pushcfunction(globalLuaState, lua_tile);
+    lua_setfield(globalLuaState, -2, "tile");
+
     lua_setglobal(globalLuaState, "ui");
 
     InitWindow(screenWidth, screenHeight, "Lupi Emulator");
+
+    // Initialize sprite system before loading game
+    initialize_sprite_system("game-example");
 
     // Add game-example directory to Lua's package.path so require() can find modules there
     lua_getglobal(globalLuaState, "package");
@@ -92,7 +103,12 @@ int main(void)
 
     lua_pushfstring(globalLuaState, "%s;./game-example/?.lua", current_path);
     lua_setfield(globalLuaState, -2, "path");
-    lua_pop(globalLuaState, 1);
+
+    // Register sprites loader in package.preload
+    lua_getfield(globalLuaState, -1, "preload");
+    lua_pushcfunction(globalLuaState, lua_require_sprites);
+    lua_setfield(globalLuaState, -2, "sprites");
+    lua_pop(globalLuaState, 2);
 
     if (luaL_dofile(globalLuaState, "game-example/game.lua") != LUA_OK) {
         fprintf(stderr, "Erro ao carregar game-example/game.lua: %s\n", lua_tostring(globalLuaState, -1));

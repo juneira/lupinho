@@ -93,3 +93,46 @@ int lua_palset(lua_State *L) {
 
     return 0;
 }
+
+//----------------------------------------------------------------------------------
+// ui.tile(spritesheet:int, tile_index:int, x:int, y:int)
+//----------------------------------------------------------------------------------
+int lua_tile(lua_State *L) {
+    int spritesheet = luaL_checkinteger(L, 1);
+    int tile_index = luaL_checkinteger(L, 2);
+    int x = luaL_checkinteger(L, 3);
+    int y = luaL_checkinteger(L, 4);
+
+    add_tile(spritesheet, tile_index, x, y);
+
+    return 0;
+}
+
+//----------------------------------------------------------------------------------
+// require("sprites") - returns SpriteSheets table
+//----------------------------------------------------------------------------------
+extern int get_sprite_count();
+extern const char* get_sprite_name_at(int idx);
+extern int get_sprite_index_at(int idx);
+
+int lua_require_sprites(lua_State *L) {
+    // Create SpriteSheets table
+    lua_newtable(L);
+
+    int sprite_count = get_sprite_count();
+    for (int i = 0; i < sprite_count; i++) {
+        const char* name = get_sprite_name_at(i);
+        int index = get_sprite_index_at(i);
+
+        if (name) {
+            lua_pushinteger(L, index);
+            lua_setfield(L, -2, name);
+        }
+    }
+
+    // Set as global SpriteSheets
+    lua_pushvalue(L, -1);
+    lua_setglobal(L, "SpriteSheets");
+
+    return 1;
+}

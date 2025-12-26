@@ -1,7 +1,13 @@
+#ifndef TYPES_H
+#define TYPES_H
+
 #include "raylib.h"
 #include <string.h>
+#include <stdint.h>
 
 #define MAX_TEXT_LENGTH 100
+#define MAX_TILES_PER_SPRITE 4096  // Increased to support 64x64 sprites
+#define MAX_SPRITE_SHEETS 100
 
 // Text
 typedef struct {
@@ -53,6 +59,24 @@ typedef struct {
     Color color;
 } TriangleItem;
 
+// Tile (for drawing)
+typedef struct {
+    int spritesheet;
+    int tile_index;
+    int x;
+    int y;
+} TileItem;
+
+// Sprite
+typedef struct {
+    int width;
+    int height;
+    uint8_t pallet_index[MAX_TILES_PER_SPRITE];
+} SpriteItem;
+
+extern int sprit_current_index;
+extern SpriteItem sprite_sheet[MAX_SPRITE_SHEETS];
+
 // List Objects
 typedef struct NodeDrawable NodeDrawable;
 
@@ -66,3 +90,5 @@ typedef struct {
     int count;
     NodeDrawable *root;
 } Drawlist;
+
+#endif // TYPES_H
