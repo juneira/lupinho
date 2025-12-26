@@ -31,7 +31,7 @@ void UpdateDrawFrame(void)
         lua_getglobal(globalLuaState, "update");
         if (lua_isfunction(globalLuaState, -1)) {
             if (lua_pcall(globalLuaState, 0, 0, 0) != LUA_OK) {
-                fprintf(stderr, "Erro em update(): %s\n", lua_tostring(globalLuaState, -1));
+                printf("Error in update(): %s\n", lua_tostring(globalLuaState, -1));
                 lua_pop(globalLuaState, 1);
             }
         } else {
@@ -111,7 +111,7 @@ int main(void)
     lua_pop(globalLuaState, 2);
 
     if (luaL_dofile(globalLuaState, "game-example/game.lua") != LUA_OK) {
-        fprintf(stderr, "Erro ao carregar game-example/game.lua: %s\n", lua_tostring(globalLuaState, -1));
+        printf("Error loading game-example/game.lua: %s\n", lua_tostring(globalLuaState, -1));
         lua_pop(globalLuaState, 1);
     }
 

@@ -7,7 +7,7 @@
 
 #define MAX_TEXT_LENGTH 100
 #define MAX_TILES_PER_SPRITE 4096  // Increased to support 64x64 sprites
-#define MAX_SPRITE_SHEETS 100
+#define MAX_SPRITE_SHEETS 5000
 
 // Text
 typedef struct {

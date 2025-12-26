@@ -5,7 +5,7 @@
 #include "drawlist.h"
 
 //----------------------------------------------------------------------------------
-// ui.draw_text(texto:string, x:int, y:int)
+// ui.draw_text(text:string, x:int, y:int)
 //----------------------------------------------------------------------------------
 int lua_draw_text(lua_State *L) {
     char *text = luaL_checkstring(L, 1);
@@ -18,55 +18,55 @@ int lua_draw_text(lua_State *L) {
 }
 
 //----------------------------------------------------------------------------------
-// ui.draw_line(x1:int, y1:int, x2:int, y2:int, cor:int)
+// ui.draw_line(x1:int, y1:int, x2:int, y2:int, color:int)
 //----------------------------------------------------------------------------------
 int lua_draw_line(lua_State *L) {
     int x1 = luaL_checkinteger(L, 1);
     int y1 = luaL_checkinteger(L, 2);
     int x2 = luaL_checkinteger(L, 3);
     int y2 = luaL_checkinteger(L, 4);
-    int cor = luaL_checkinteger(L, 5);
+    int color = luaL_checkinteger(L, 5);
 
-    add_line(x1, y1, x2, y2, get_palette_color(cor));
+    add_line(x1, y1, x2, y2, get_palette_color(color));
 
     return 0;
 }
 
 //----------------------------------------------------------------------------------
-// ui.draw_rect(x:int, y:int, largura:int, altura:int, prenchido:bool, cor:int)
+// ui.draw_rect(x:int, y:int, width:int, height:int, filled:bool, color:int)
 //----------------------------------------------------------------------------------
 int lua_draw_rect(lua_State *L) {
     int x = luaL_checkinteger(L, 1);
     int y = luaL_checkinteger(L, 2);
-    int largura = luaL_checkinteger(L, 3);
-    int altura = luaL_checkinteger(L, 4);
-    bool prenchido = lua_toboolean(L, 5);
-    int cor = luaL_checkinteger(L, 6);
+    int width = luaL_checkinteger(L, 3);
+    int height = luaL_checkinteger(L, 4);
+    bool filled = lua_toboolean(L, 5);
+    int color = luaL_checkinteger(L, 6);
 
-    add_rect(x, y, largura, altura, prenchido, get_palette_color(cor));
+    add_rect(x, y, width, height, filled, get_palette_color(color));
 
     return 0;
 }
 
 //----------------------------------------------------------------------------------
-// ui.draw_circle(centro_x:int, centro_y:int, raio:int, prenchido:bool, cor:int, borda:bool, cor:int)
+// ui.draw_circle(center_x:int, center_y:int, radius:int, filled:bool, color:int, border:bool, border_color:int)
 //----------------------------------------------------------------------------------
 int lua_draw_circle(lua_State *L) {
-    int centro_x = luaL_checkinteger(L, 1);
-    int centro_y = luaL_checkinteger(L, 2);
-    int raio = luaL_checkinteger(L, 3);
-    bool prenchido = lua_toboolean(L, 4);
-    int cor = luaL_checkinteger(L, 5);
-    bool borda = lua_toboolean(L, 6);
-    int cor_borda = luaL_checkinteger(L, 7);
+    int center_x = luaL_checkinteger(L, 1);
+    int center_y = luaL_checkinteger(L, 2);
+    int radius = luaL_checkinteger(L, 3);
+    bool filled = lua_toboolean(L, 4);
+    int color = luaL_checkinteger(L, 5);
+    bool border = lua_toboolean(L, 6);
+    int border_color = luaL_checkinteger(L, 7);
 
-    add_circle(centro_x, centro_y, raio, prenchido, get_palette_color(cor), borda, get_palette_color(cor_borda));
+    add_circle(center_x, center_y, radius, filled, get_palette_color(color), border, get_palette_color(border_color));
 
     return 0;
 }
 
 //----------------------------------------------------------------------------------
-// ui.draw_triangle(p1_x:int, p1_y:int, p2_x:int, p2_y:int, p3_x:int, p3_y:int, cor:int)
+// ui.draw_triangle(p1_x:int, p1_y:int, p2_x:int, p2_y:int, p3_x:int, p3_y:int, color:int)
 //----------------------------------------------------------------------------------
 int lua_draw_triangle(lua_State *L) {
     int p1_x = luaL_checkinteger(L, 1);
@@ -75,21 +75,21 @@ int lua_draw_triangle(lua_State *L) {
     int p2_y = luaL_checkinteger(L, 4);
     int p3_x = luaL_checkinteger(L, 5);
     int p3_y = luaL_checkinteger(L, 6);
-    int cor = luaL_checkinteger(L, 7);
+    int color = luaL_checkinteger(L, 7);
 
-    add_triangle(p1_x, p1_y, p2_x, p2_y, p3_x, p3_y, get_palette_color(cor));
+    add_triangle(p1_x, p1_y, p2_x, p2_y, p3_x, p3_y, get_palette_color(color));
 
     return 0;
 }
 
 //----------------------------------------------------------------------------------
-// ui.palset(posicao:int, cor:int)
+// ui.palset(position:int, color:int)
 //----------------------------------------------------------------------------------
 int lua_palset(lua_State *L) {
-    int posicao = luaL_checkinteger(L, 1);
-    int cor = luaL_checkinteger(L, 2);
+    int position = luaL_checkinteger(L, 1);
+    int color = luaL_checkinteger(L, 2);
 
-    palset(posicao, cor);
+    palset(position, color);
 
     return 0;
 }
