@@ -110,6 +110,31 @@ int main(void)
     lua_pushcfunction(globalLuaState, lua_btnp);
     lua_setfield(globalLuaState, -2, "btnp");
 
+    // TODO
+    lua_pushcfunction(globalLuaState, lua_camera);
+    lua_setfield(globalLuaState, -2, "camera");
+
+    lua_pushcfunction(globalLuaState, lua_clip);
+    lua_setfield(globalLuaState, -2, "clip");
+
+    lua_pushcfunction(globalLuaState, lua_cls);
+    lua_setfield(globalLuaState, -2, "cls");
+
+    lua_pushcfunction(globalLuaState, lua_preload_spritesheet);
+    lua_setfield(globalLuaState, -2, "preload_spritesheet");
+
+    lua_pushcfunction(globalLuaState, lua_draw_sprite);
+    lua_setfield(globalLuaState, -2, "draw_sprite");
+
+    lua_pushcfunction(globalLuaState, lua_print);
+    lua_setfield(globalLuaState, -2, "print");
+
+    lua_pushcfunction(globalLuaState, lua_set_pallet);
+    lua_setfield(globalLuaState, -2, "set_pallet");
+
+    lua_pushcfunction(globalLuaState, lua_fillp);
+    lua_setfield(globalLuaState, -2, "fillp");
+
     lua_setglobal(globalLuaState, "ui");
 
     // Expose button constants as globals

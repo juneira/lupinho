@@ -220,3 +220,89 @@ int lua_require_sprites(lua_State *L) {
 
     return 1;
 }
+
+// TODO
+
+//----------------------------------------------------------------------------------
+// ui.camera(x, y)
+//----------------------------------------------------------------------------------
+int lua_camera(lua_State *L) {
+    int x = luaL_checkinteger(L, 1);
+    int y = luaL_checkinteger(L, 2);
+
+    return 0;
+}
+
+//----------------------------------------------------------------------------------
+// ui.clip(x, y, width, height)
+//----------------------------------------------------------------------------------
+int lua_clip(lua_State *L) {
+    int x = luaL_checkinteger(L, 1);
+    int y = luaL_checkinteger(L, 2);
+    int width = luaL_checkinteger(L, 3);
+    int height = luaL_checkinteger(L, 4);
+
+    return 0;
+}
+
+//----------------------------------------------------------------------------------
+// ui.cls(color:int)
+//----------------------------------------------------------------------------------
+int lua_cls(lua_State *L) {
+    int color = luaL_checkinteger(L, 1);
+
+    return 0;
+}
+
+//----------------------------------------------------------------------------------
+// ui.preload_spritesheet(spritesheet)
+//----------------------------------------------------------------------------------
+int lua_preload_spritesheet(lua_State *L) {
+    int spritesheet = luaL_checkinteger(L, 1);
+
+    return 0;
+}
+
+//----------------------------------------------------------------------------------
+// ui.draw_sprite(x, y, sprite_index, size)
+//----------------------------------------------------------------------------------
+int lua_draw_sprite(lua_State *L) {
+    int x = luaL_checkinteger(L, 1);
+    int y = luaL_checkinteger(L, 2);
+    int sprite_index = luaL_checkinteger(L, 3);
+    int size = luaL_checkinteger(L, 4);
+
+    return 0;
+}
+
+//----------------------------------------------------------------------------------
+// ui.print(text, x, y, color)
+//----------------------------------------------------------------------------------
+int lua_print(lua_State *L) {
+    char *text = luaL_checkstring(L, 1);
+    int x = luaL_checkinteger(L, 2);
+    int y = luaL_checkinteger(L, 3);
+    int color = luaL_checkinteger(L, 4);
+
+    return 0;
+}
+
+//----------------------------------------------------------------------------------
+// ui.set_pallet(start_index, count, palette_table)
+//----------------------------------------------------------------------------------
+int lua_set_pallet(lua_State *L) {
+    int start_index = luaL_checkinteger(L, 1);
+    int count = luaL_checkinteger(L, 2);
+    luaL_checktype(L, 3, LUA_TTABLE);  // Check that argument 3 is a table
+
+    return 0;
+}
+
+//----------------------------------------------------------------------------------
+// ui.fillp([pattern_bytes...])
+//----------------------------------------------------------------------------------
+int lua_fillp(lua_State *L) {
+    int pattern_bytes = luaL_checkinteger(L, 1);
+
+    return 0;
+}

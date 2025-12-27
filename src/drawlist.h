@@ -56,4 +56,14 @@ int lua_spr(lua_State *L);
 int lua_require_sprites(lua_State *L);
 int lua_btn(lua_State *L);
 int lua_btnp(lua_State *L);
+
+// TODO
+int lua_camera(lua_State *L);
+int lua_clip(lua_State *L);
+int lua_cls(lua_State *L);
+int lua_preload_spritesheet(lua_State *L);
+int lua_draw_sprite(lua_State *L);
+int lua_print(lua_State *L);
+int lua_set_pallet(lua_State *L);
+int lua_fillp(lua_State *L);
 #endif
