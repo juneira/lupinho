@@ -3,6 +3,7 @@
 #include <lauxlib.h>
 
 #include "drawlist.h"
+#include "raylib.h"
 
 //----------------------------------------------------------------------------------
 // ui.draw_text(text:string, x:int, y:int)
@@ -106,6 +107,19 @@ int lua_tile(lua_State *L) {
     add_tile(spritesheet, tile_index, x, y);
 
     return 0;
+}
+
+//----------------------------------------------------------------------------------
+// ui.btn(button:int, pad:int) -> bool
+//----------------------------------------------------------------------------------
+int lua_btn(lua_State *L) {
+    int button = luaL_checkinteger(L, 1);
+    int pad = luaL_optinteger(L, 2, 0);
+
+    bool is_down = IsGamepadButtonDown(pad, button);
+    lua_pushboolean(L, is_down);
+
+    return 1;
 }
 
 //----------------------------------------------------------------------------------

@@ -3,6 +3,8 @@ require "sprites"
 
 x = 200
 t = 0
+player_x = 100
+player_y = 100
 frame = 0
 frame_counter = 0
 
@@ -26,11 +28,21 @@ function update()
     -- ui.draw_circle(200, 360, 20, false, 8, true, 12)
     -- ui.draw_triangle(20, 250, 100, 250, 55, 350, 9)
 
-    ui.tile(SpriteSheets['player.run.' .. frame + 1], 0, 100, 100)
+    ui.tile(SpriteSheets['player.run.' .. frame + 1], 0, player_x, player_y)
 
     frame_counter = frame_counter + 1
     if frame_counter >= 5 then
         frame = (frame + 1) % 5
         frame_counter = 0
+    end
+
+    if ui.btn(RIGHT, 0) then
+        player_x = player_x + 3
+    elseif ui.btn(LEFT, 0) then
+        player_x = player_x - 3
+    elseif ui.btn(UP, 0) then
+        player_y = player_y - 3
+    elseif ui.btn(DOWN, 0) then
+        player_y = player_y + 3
     end
 end

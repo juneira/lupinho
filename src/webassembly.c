@@ -5,6 +5,7 @@
 #include <lua.h>
 #include <lualib.h>
 #include <lauxlib.h>
+#include "raylib.h"
 
 /**
 Global objects
@@ -91,7 +92,36 @@ int main(void)
     lua_pushcfunction(globalLuaState, lua_tile);
     lua_setfield(globalLuaState, -2, "tile");
 
+    lua_pushcfunction(globalLuaState, lua_btn);
+    lua_setfield(globalLuaState, -2, "btn");
+
     lua_setglobal(globalLuaState, "ui");
+
+    // Expose button constants as globals
+    // These match common gamepad button conventions
+    lua_pushinteger(globalLuaState, GAMEPAD_BUTTON_LEFT_FACE_RIGHT);
+    lua_setglobal(globalLuaState, "RIGHT");
+
+    lua_pushinteger(globalLuaState, GAMEPAD_BUTTON_LEFT_FACE_LEFT);
+    lua_setglobal(globalLuaState, "LEFT");
+
+    lua_pushinteger(globalLuaState, GAMEPAD_BUTTON_LEFT_FACE_UP);
+    lua_setglobal(globalLuaState, "UP");
+
+    lua_pushinteger(globalLuaState, GAMEPAD_BUTTON_LEFT_FACE_DOWN);
+    lua_setglobal(globalLuaState, "DOWN");
+
+    lua_pushinteger(globalLuaState, GAMEPAD_BUTTON_RIGHT_FACE_RIGHT);
+    lua_setglobal(globalLuaState, "BTN_Z");
+
+    lua_pushinteger(globalLuaState, GAMEPAD_BUTTON_RIGHT_FACE_LEFT);
+    lua_setglobal(globalLuaState, "BTN_E");
+
+    lua_pushinteger(globalLuaState, GAMEPAD_BUTTON_RIGHT_FACE_UP);
+    lua_setglobal(globalLuaState, "BTN_Q");
+
+    lua_pushinteger(globalLuaState, GAMEPAD_BUTTON_RIGHT_FACE_DOWN);
+    lua_setglobal(globalLuaState, "BTN_Z");
 
     InitWindow(screenWidth, screenHeight, "Lupi Emulator");
 
