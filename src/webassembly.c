@@ -80,11 +80,20 @@ int main(void)
     lua_pushcfunction(globalLuaState, lua_draw_rect);
     lua_setfield(globalLuaState, -2, "draw_rect");
 
+    lua_pushcfunction(globalLuaState, lua_rect);
+    lua_setfield(globalLuaState, -2, "rect");
+
+    lua_pushcfunction(globalLuaState, lua_rectfill);
+    lua_setfield(globalLuaState, -2, "rectfill");
+
     lua_pushcfunction(globalLuaState, lua_draw_circle);
     lua_setfield(globalLuaState, -2, "draw_circle");
 
-    lua_pushcfunction(globalLuaState, lua_draw_triangle);
-    lua_setfield(globalLuaState, -2, "draw_triangle");
+    lua_pushcfunction(globalLuaState, lua_circfill);
+    lua_setfield(globalLuaState, -2, "circfill");
+
+    lua_pushcfunction(globalLuaState, lua_trisfill);
+    lua_setfield(globalLuaState, -2, "trisfill");
 
     lua_pushcfunction(globalLuaState, lua_palset);
     lua_setfield(globalLuaState, -2, "palset");

@@ -50,6 +50,36 @@ int lua_draw_rect(lua_State *L) {
 }
 
 //----------------------------------------------------------------------------------
+// ui.rect(x1, y1, x2, y2, color)
+//----------------------------------------------------------------------------------
+int lua_rect(lua_State *L) {
+    int x1 = luaL_checkinteger(L, 1);
+    int y1 = luaL_checkinteger(L, 2);
+    int x2 = luaL_checkinteger(L, 3);
+    int y2 = luaL_checkinteger(L, 4);
+    int color = luaL_checkinteger(L, 5);
+
+    add_rect(x1, y1, (x2 - x1), (y2 - y1), false, get_palette_color(color));
+
+    return 0;
+}
+
+//----------------------------------------------------------------------------------
+// ui.rectfill(x1, y1, x2, y2, color)
+//----------------------------------------------------------------------------------
+int lua_rectfill(lua_State *L) {
+    int x1 = luaL_checkinteger(L, 1);
+    int y1 = luaL_checkinteger(L, 2);
+    int x2 = luaL_checkinteger(L, 3);
+    int y2 = luaL_checkinteger(L, 4);
+    int color = luaL_checkinteger(L, 5);
+
+    add_rect(x1, y1, (x2 - x1), (y2 - y1), true, get_palette_color(color));
+
+    return 0;
+}
+
+//----------------------------------------------------------------------------------
 // ui.draw_circle(center_x:int, center_y:int, radius:int, filled:bool, color:int, border:bool, border_color:int)
 //----------------------------------------------------------------------------------
 int lua_draw_circle(lua_State *L) {
@@ -67,9 +97,23 @@ int lua_draw_circle(lua_State *L) {
 }
 
 //----------------------------------------------------------------------------------
-// ui.draw_triangle(p1_x:int, p1_y:int, p2_x:int, p2_y:int, p3_x:int, p3_y:int, color:int)
+// ui.circfill(x, y, radius, color)
 //----------------------------------------------------------------------------------
-int lua_draw_triangle(lua_State *L) {
+int lua_circfill(lua_State *L) {
+    int center_x = luaL_checkinteger(L, 1);
+    int center_y = luaL_checkinteger(L, 2);
+    int radius = luaL_checkinteger(L, 3);
+    int color = luaL_checkinteger(L, 4);
+
+    add_circle(center_x, center_y, radius, true, get_palette_color(color), true, get_palette_color(color));
+
+    return 0;
+}
+
+//----------------------------------------------------------------------------------
+// ui.trisfill(p1_x:int, p1_y:int, p2_x:int, p2_y:int, p3_x:int, p3_y:int, color:int)
+//----------------------------------------------------------------------------------
+int lua_trisfill(lua_State *L) {
     int p1_x = luaL_checkinteger(L, 1);
     int p1_y = luaL_checkinteger(L, 2);
     int p2_x = luaL_checkinteger(L, 3);

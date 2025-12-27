@@ -44,8 +44,11 @@ Lua Functions
 int lua_draw_text(lua_State *L);
 int lua_draw_line(lua_State *L);
 int lua_draw_rect(lua_State *L);
+int lua_rect(lua_State *L);
+int lua_rectfill(lua_State *L);
 int lua_draw_circle(lua_State *L);
-int lua_draw_triangle(lua_State *L);
+int lua_circfill(lua_State *L);
+int lua_trisfill(lua_State *L);
 int lua_palset(lua_State *L);
 int lua_tile(lua_State *L);
 int lua_require_sprites(lua_State *L);
