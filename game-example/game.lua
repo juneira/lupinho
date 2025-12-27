@@ -38,11 +38,22 @@ function update()
 
     if ui.btn(RIGHT, 0) then
         player_x = player_x + 3
-    elseif ui.btn(LEFT, 0) then
+    end
+    if ui.btn(LEFT, 0) then
         player_x = player_x - 3
-    elseif ui.btn(UP, 0) then
+    end
+    if ui.btn(UP, 0) then
         player_y = player_y - 3
-    elseif ui.btn(DOWN, 0) then
+    end
+    if ui.btn(DOWN, 0) then
         player_y = player_y + 3
+    end
+
+    if ui.btnp(BTN_Z, 0) then
+        ui.draw_text("BTN_Z", 200, 100)
+    elseif ui.btnp(BTN_E, 0) then
+        ui.draw_text("BTN_E", 200, 100)
+    elseif ui.btnp(BTN_Q, 0) then
+        ui.draw_text("BTN_Q", 200, 100)
     end
 end

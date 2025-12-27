@@ -50,4 +50,5 @@ int lua_palset(lua_State *L);
 int lua_tile(lua_State *L);
 int lua_require_sprites(lua_State *L);
 int lua_btn(lua_State *L);
+int lua_btnp(lua_State *L);
 #endif

@@ -95,6 +95,9 @@ int main(void)
     lua_pushcfunction(globalLuaState, lua_btn);
     lua_setfield(globalLuaState, -2, "btn");
 
+    lua_pushcfunction(globalLuaState, lua_btnp);
+    lua_setfield(globalLuaState, -2, "btnp");
+
     lua_setglobal(globalLuaState, "ui");
 
     // Expose button constants as globals

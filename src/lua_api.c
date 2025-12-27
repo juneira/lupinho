@@ -123,6 +123,19 @@ int lua_btn(lua_State *L) {
 }
 
 //----------------------------------------------------------------------------------
+// ui.btnp(button:int, pad:int) -> bool
+//----------------------------------------------------------------------------------
+int lua_btnp(lua_State *L) {
+    int button = luaL_checkinteger(L, 1);
+    int pad = luaL_optinteger(L, 2, 0);
+
+    bool is_pressed = IsGamepadButtonPressed(pad, button);
+    lua_pushboolean(L, is_pressed);
+
+    return 1;
+}
+
+//----------------------------------------------------------------------------------
 // require("sprites") - returns SpriteSheets table
 //----------------------------------------------------------------------------------
 extern int get_sprite_count();
