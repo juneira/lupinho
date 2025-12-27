@@ -1,5 +1,6 @@
 #include "drawlist.h"
 #include "sprite_loader.h"
+#include "map_loader.h"
 
 #include <lua.h>
 #include <lualib.h>
@@ -33,6 +34,8 @@ void UpdateDrawFrame(void)
             if (lua_pcall(globalLuaState, 0, 0, 0) != LUA_OK) {
                 printf("Error in update(): %s\n", lua_tostring(globalLuaState, -1));
                 lua_pop(globalLuaState, 1);
+            } else {
+                printf("Update successful\n");
             }
         } else {
             lua_pop(globalLuaState, 1);
@@ -95,6 +98,9 @@ int main(void)
     // Initialize sprite system before loading game
     initialize_sprite_system("game-example");
 
+    // Initialize map system
+    initialize_map_system(globalLuaState, "game-example");
+
     // Add game-example directory to Lua's package.path so require() can find modules there
     lua_getglobal(globalLuaState, "package");
     lua_getfield(globalLuaState, -1, "path");
@@ -113,6 +119,8 @@ int main(void)
     if (luaL_dofile(globalLuaState, "game-example/game.lua") != LUA_OK) {
         printf("Error loading game-example/game.lua: %s\n", lua_tostring(globalLuaState, -1));
         lua_pop(globalLuaState, 1);
+    } else {
+        printf("Game-example/game.lua loaded successfully\n");
     }
 
     SetTargetFPS(60);
