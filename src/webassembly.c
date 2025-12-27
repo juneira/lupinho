@@ -101,6 +101,9 @@ int main(void)
     lua_pushcfunction(globalLuaState, lua_tile);
     lua_setfield(globalLuaState, -2, "tile");
 
+    lua_pushcfunction(globalLuaState, lua_spr);
+    lua_setfield(globalLuaState, -2, "spr");
+
     lua_pushcfunction(globalLuaState, lua_btn);
     lua_setfield(globalLuaState, -2, "btn");
 

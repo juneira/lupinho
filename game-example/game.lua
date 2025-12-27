@@ -28,6 +28,10 @@ function update()
     -- ui.draw_circle(200, 360, 20, false, 8, true, 12)
     -- ui.draw_triangle(20, 250, 100, 250, 55, 350, 9)
 
+    ui.spr(SpriteSheets['tilemap.leaves'], 10, 50)
+
+    ui.tile(SpriteSheets['tilemap.leaves'], 0, 80, 50)
+
     ui.tile(SpriteSheets['player.run.' .. frame + 1], 0, player_x, player_y)
 
     frame_counter = frame_counter + 1

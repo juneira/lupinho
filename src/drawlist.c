@@ -32,6 +32,9 @@ void draw(NodeDrawable *node) {
         case 's':
             draw_tile((TileItem *) node->drawable);
             break;
+        case 'w':
+            draw_sprite((SpriteItem *) node->drawable);
+            break;
     }
 }
 
@@ -181,10 +184,41 @@ void draw_triangle(TriangleItem *triangle) {
 }
 
 /**
-Tile Functions
+Sprite Functions
 **/
 extern SpriteItem sprite_sheet[MAX_SPRITE_SHEETS];
 
+void add_sprite(int spritesheet, int x, int y) {
+    SpriteItem *sprite = &sprite_sheet[spritesheet];
+    sprite->x = x;
+    sprite->y = y;
+
+    add_drawable(sprite, 'w');
+}
+
+void draw_sprite(SpriteItem *sprite) {
+    int tile_width = sprite->width;
+    int tile_height = sprite->height;
+    int pixels_per_tile = tile_width * tile_height;
+
+    for(int tile_index = 0; tile_index < sprite->tile_count; tile_index++) {
+        for(int py = 0; py < tile_height; py++) {
+            for(int px = 0; px < tile_width; px++) {
+                int pixel_index = tile_index * pixels_per_tile + py * tile_width + px;
+                int palette_idx = sprite->pallet_index[pixel_index];
+                Color color = get_palette_color(palette_idx);
+
+                if (palette_idx == 0) continue; // transparent
+
+                DrawPixel(sprite->x + tile_index * tile_width + px, sprite->y + py, color);
+            }
+        }
+    }
+}
+
+/**
+Tile Functions
+**/
 void add_tile(int spritesheet, int tile_index, int x, int y) {
     TileItem *tile = (TileItem *) malloc(sizeof(TileItem));
     tile->spritesheet = spritesheet;

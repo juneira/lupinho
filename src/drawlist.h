@@ -29,7 +29,8 @@ void draw_triangle(TriangleItem *triangle);
 
 void add_tile(int spritesheet, int tile_index, int x, int y);
 void draw_tile(TileItem *tile);
-
+void add_sprite(int spritesheet, int x, int y);
+void draw_sprite(SpriteItem *sprite);
 /*
 Palette Functions
 */
@@ -51,6 +52,7 @@ int lua_circfill(lua_State *L);
 int lua_trisfill(lua_State *L);
 int lua_palset(lua_State *L);
 int lua_tile(lua_State *L);
+int lua_spr(lua_State *L);
 int lua_require_sprites(lua_State *L);
 int lua_btn(lua_State *L);
 int lua_btnp(lua_State *L);

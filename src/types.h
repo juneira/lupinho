@@ -6,8 +6,8 @@
 #include <stdint.h>
 
 #define MAX_TEXT_LENGTH 100
-#define MAX_TILES_PER_SPRITE 4096  // Increased to support 64x64 sprites
-#define MAX_SPRITE_SHEETS 5000
+#define MAX_TILES_PER_SPRITE 40960
+#define MAX_SPRITE_SHEETS 100
 
 // Text
 typedef struct {
@@ -69,6 +69,9 @@ typedef struct {
 
 // Sprite
 typedef struct {
+    int x;
+    int y;
+    int tile_count;
     int width;
     int height;
     uint8_t pallet_index[MAX_TILES_PER_SPRITE];

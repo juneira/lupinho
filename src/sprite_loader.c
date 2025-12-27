@@ -356,6 +356,8 @@ void index_sprite(ImageData *img, ColorSet *palette, int sprite_index) {
         }
     }
 
+    sprite_sheet[sprite_index].tile_count = pixel_count / (tile_width * tile_height);
+
     printf("[SPRITE] Indexed %d pixels for sprite %d\n", pixel_count, sprite_index);
 }
 

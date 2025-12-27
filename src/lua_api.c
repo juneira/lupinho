@@ -154,6 +154,19 @@ int lua_tile(lua_State *L) {
 }
 
 //----------------------------------------------------------------------------------
+// ui.spr(spritesheet:int, x:int, y:int)
+//----------------------------------------------------------------------------------
+int lua_spr(lua_State *L) {
+    int spritesheet = luaL_checkinteger(L, 1);
+    int x = luaL_checkinteger(L, 2);
+    int y = luaL_checkinteger(L, 3);
+
+    add_sprite(spritesheet, x, y);
+
+    return 0;
+}
+
+//----------------------------------------------------------------------------------
 // ui.btn(button:int, pad:int) -> bool
 //----------------------------------------------------------------------------------
 int lua_btn(lua_State *L) {
