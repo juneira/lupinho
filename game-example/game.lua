@@ -21,7 +21,8 @@ function update()
     ui.draw_text("Bem-vindo ao Lupi!", 280, 180 + math.floor(y))
 
     -- ui.draw_line(10, 10, 280, 180, 3)
-    -- ui.draw_rect(50, 50, 80, 80, true, 40)
+    -- ui.draw_rect(50, 50, 80, 80, true, 2)
+
     -- ui.draw_rect(185, 185, 50, 50, false, 5)
     -- ui.draw_circle(200, 300, 20, true, 6, true, 10)
     -- ui.draw_circle(260, 300, 20, true, 7, false, 11)
@@ -30,7 +31,6 @@ function update()
 
     ui.spr(SpriteSheets['tilemap.leaves'], 10, 50)
 
-    ui.tile(SpriteSheets['tilemap.leaves'], 0, 80, 50)
 
     ui.tile(SpriteSheets['player.run.' .. frame + 1], 0, player_x, player_y)
 

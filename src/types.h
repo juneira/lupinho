@@ -6,8 +6,6 @@
 #include <stdint.h>
 
 #define MAX_TEXT_LENGTH 100
-#define MAX_TILES_PER_SPRITE 40960
-#define MAX_SPRITE_SHEETS 100
 
 // Text
 typedef struct {
@@ -59,9 +57,11 @@ typedef struct {
     Color color;
 } TriangleItem;
 
-// Tile (for drawing)
+// Tile
 typedef struct {
-    int spritesheet;
+    const char *data;
+    int width;
+    int height;
     int tile_index;
     int x;
     int y;
@@ -69,16 +69,13 @@ typedef struct {
 
 // Sprite
 typedef struct {
+    const char *data;
     int x;
     int y;
-    int tile_count;
-    int width;
-    int height;
-    uint8_t pallet_index[MAX_TILES_PER_SPRITE];
+    int tile_width;
+    int tile_height;
+    int ntiles;
 } SpriteItem;
-
-extern int sprit_current_index;
-extern SpriteItem sprite_sheet[MAX_SPRITE_SHEETS];
 
 // List Objects
 typedef struct NodeDrawable NodeDrawable;

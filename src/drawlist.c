@@ -186,31 +186,30 @@ void draw_triangle(TriangleItem *triangle) {
 /**
 Sprite Functions
 **/
-extern SpriteItem sprite_sheet[MAX_SPRITE_SHEETS];
-
-void add_sprite(int spritesheet, int x, int y) {
-    SpriteItem *sprite = &sprite_sheet[spritesheet];
+void add_sprite(const char *data, int width, int height, int ntiles, int x, int y) {
+    SpriteItem *sprite = (SpriteItem *) malloc(sizeof(SpriteItem));
+    sprite->data = data;
+    sprite->tile_width = width;
+    sprite->tile_height = height;
     sprite->x = x;
     sprite->y = y;
+    sprite->ntiles = ntiles;
 
     add_drawable(sprite, 'w');
 }
 
 void draw_sprite(SpriteItem *sprite) {
-    int tile_width = sprite->width;
-    int tile_height = sprite->height;
-    int pixels_per_tile = tile_width * tile_height;
+    printf("Drawing sprite with %d tiles\n", sprite->ntiles);
 
-    for(int tile_index = 0; tile_index < sprite->tile_count; tile_index++) {
-        for(int py = 0; py < tile_height; py++) {
-            for(int px = 0; px < tile_width; px++) {
-                int pixel_index = tile_index * pixels_per_tile + py * tile_width + px;
-                int palette_idx = sprite->pallet_index[pixel_index];
-                Color color = get_palette_color(palette_idx);
+    int pixel_index = 0;
 
+    for(int tile_index = 0; tile_index < sprite->ntiles; tile_index++) {
+        for(int y = 0; y < sprite->tile_height; y++) {
+            for(int x = 0; x < sprite->tile_width; x++) {
+                int palette_idx = (int) sprite->data[pixel_index++];
                 if (palette_idx == 0) continue; // transparent
-
-                DrawPixel(sprite->x + tile_index * tile_width + px, sprite->y + py, color);
+                Color color = get_palette_color(palette_idx);
+                DrawPixel(sprite->x + x + (tile_index * sprite->tile_width), sprite->y + y, color);
             }
         }
     }
@@ -219,9 +218,11 @@ void draw_sprite(SpriteItem *sprite) {
 /**
 Tile Functions
 **/
-void add_tile(int spritesheet, int tile_index, int x, int y) {
+void add_tile(const char *data, int width, int height, int tile_index, int x, int y) {
     TileItem *tile = (TileItem *) malloc(sizeof(TileItem));
-    tile->spritesheet = spritesheet;
+    tile->data = data;
+    tile->width = width;
+    tile->height = height;
     tile->tile_index = tile_index;
     tile->x = x;
     tile->y = y;
@@ -230,33 +231,17 @@ void add_tile(int spritesheet, int tile_index, int x, int y) {
 }
 
 void draw_tile(TileItem *tile) {
-    if (tile->spritesheet < 0 || tile->spritesheet >= MAX_SPRITE_SHEETS) {
-        return;
-    }
+    int start_pixel = tile->tile_index * tile->width * tile->height;
 
-    SpriteItem *sprite = &sprite_sheet[tile->spritesheet];
-    if (sprite->width == 0 || sprite->height == 0) {
-        return;
-    }
+    for(int y = 0; y < tile->height; y++) {
+        for(int x = 0; x < tile->width; x++) {
+            int pixel_index = start_pixel + y * tile->width + x;
+            int palette_idx = (int) tile->data[pixel_index];
 
-    int tile_width = sprite->width;
-    int tile_height = sprite->height;
-    int pixels_per_tile = tile_width * tile_height;
-    int start_pixel = tile->tile_index * pixels_per_tile;
+            if (palette_idx == 0) continue; // transparent
 
-    // Draw each pixel of the tile
-    for (int py = 0; py < tile_height; py++) {
-        for (int px = 0; px < tile_width; px++) {
-            int pixel_index = start_pixel + py * tile_width + px;
-            if (pixel_index >= MAX_TILES_PER_SPRITE) break;
-
-            int palette_idx = sprite->pallet_index[pixel_index];
             Color color = get_palette_color(palette_idx);
-
-            // Skip transparent pixels (palette index 0)
-            if (palette_idx != 0) {
-                DrawPixel(tile->x + px, tile->y + py, color);
-            }
+            DrawPixel(tile->x + x, tile->y + y, color);
         }
     }
 }

@@ -7,5 +7,6 @@
     "editor.insertSpaces": true,
     "editor.detectIndentation": false,
     "editor.defaultFormatter": null
-  },
+},
+"cmake.sourceDirectory": "/lupinho/src/libs/raylib-web",
 }

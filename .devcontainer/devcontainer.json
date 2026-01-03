@@ -1,0 +1,29 @@
+{
+	"name": "Lupinho Development",
+	"build": {
+		"context": "..",
+		"dockerfile": "../Dockerfile"
+	},
+	"workspaceFolder": "/workspace",
+	"remoteUser": "root",
+	"customizations": {
+		"vscode": {
+			"settings": {
+				"lua.runtime.version": "Lua 5.1",
+				"lua.workspace.library": [
+					"/usr/local/share/lua/5.1"
+				]
+			},
+			"extensions": [
+				"JohnnyMorganz.stylua",
+				"sumneko.lua",
+				"ms-vscode.cmake-tools",
+				"ms-vscode.cpptools"
+			]
+		}
+	},
+	"mounts": [
+		"source=${localWorkspaceFolder},target=/lupinho/,type=bind"
+	],
+	"postCreateCommand": "echo 'Dev container for Lupinho is ready!'"
+}

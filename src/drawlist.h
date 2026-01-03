@@ -27,16 +27,18 @@ void draw_circle(CircleItem *circle);
 void add_triangle(int p1_x, int p1_y, int p2_x, int p2_y, int p3_x, int p3_y, Color color);
 void draw_triangle(TriangleItem *triangle);
 
-void add_tile(int spritesheet, int tile_index, int x, int y);
+void add_tile(const char *data, int width, int height, int tile_index, int x, int y);
 void draw_tile(TileItem *tile);
-void add_sprite(int spritesheet, int x, int y);
+void add_sprite(const char *data, int width, int height, int ntiles, int x, int y);
 void draw_sprite(SpriteItem *sprite);
+
 /*
 Palette Functions
 */
 #define PALETTE_SIZE 256
 extern Color palette[PALETTE_SIZE];
 void palset(int position, int bgr555);
+void load_palette_from_lua(lua_State *L);
 Color get_palette_color(int index);
 
 /*
@@ -66,4 +68,5 @@ int lua_draw_sprite(lua_State *L);
 int lua_print(lua_State *L);
 int lua_set_pallet(lua_State *L);
 int lua_fillp(lua_State *L);
+int lua_log(lua_State *L);
 #endif

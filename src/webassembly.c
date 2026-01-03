@@ -1,6 +1,4 @@
 #include "drawlist.h"
-#include "sprite_loader.h"
-#include "map_loader.h"
 
 #include <lua.h>
 #include <lualib.h>
@@ -13,15 +11,11 @@ Global objects
 Drawlist drawlist;
 lua_State *globalLuaState = NULL;
 
-// Sprite system globals
-int sprit_current_index = 0;
-SpriteItem sprite_sheet[MAX_SPRITE_SHEETS];
-
 /**
 Constants
 **/
-const int screenWidth = 800;
-const int screenHeight = 450;
+const int screenWidth = 480;
+const int screenHeight = 270;
 
 #if defined(PLATFORM_WEB)
     #include <emscripten/emscripten.h>
@@ -35,8 +29,6 @@ void UpdateDrawFrame(void)
             if (lua_pcall(globalLuaState, 0, 0, 0) != LUA_OK) {
                 printf("Error in update(): %s\n", lua_tostring(globalLuaState, -1));
                 lua_pop(globalLuaState, 1);
-            } else {
-                printf("Update successful\n");
             }
         } else {
             lua_pop(globalLuaState, 1);
@@ -54,13 +46,13 @@ void UpdateDrawFrame(void)
         node = node->next;
     }
 
-    clear_drawlist();
-
     #ifndef PRODUCTION
-        DrawFPS(10, 10); // DEBUG
+    DrawFPS(10, 10); // DEBUG
     #endif
 
     EndDrawing();
+
+    clear_drawlist();
 }
 
 
@@ -109,6 +101,9 @@ int main(void)
 
     lua_pushcfunction(globalLuaState, lua_btnp);
     lua_setfield(globalLuaState, -2, "btnp");
+
+    lua_pushcfunction(globalLuaState, lua_log);
+    lua_setfield(globalLuaState, -2, "log");
 
     // TODO
     lua_pushcfunction(globalLuaState, lua_camera);
@@ -165,12 +160,6 @@ int main(void)
 
     InitWindow(screenWidth, screenHeight, "Lupi Emulator");
 
-    // Initialize sprite system before loading game
-    initialize_sprite_system("game-example");
-
-    // Initialize map system
-    initialize_map_system(globalLuaState, "game-example");
-
     // Add game-example directory to Lua's package.path so require() can find modules there
     lua_getglobal(globalLuaState, "package");
     lua_getfield(globalLuaState, -1, "path");
@@ -180,17 +169,12 @@ int main(void)
     lua_pushfstring(globalLuaState, "%s;./game-example/?.lua", current_path);
     lua_setfield(globalLuaState, -2, "path");
 
-    // Register sprites loader in package.preload
-    lua_getfield(globalLuaState, -1, "preload");
-    lua_pushcfunction(globalLuaState, lua_require_sprites);
-    lua_setfield(globalLuaState, -2, "sprites");
-    lua_pop(globalLuaState, 2);
-
     if (luaL_dofile(globalLuaState, "game-example/game.lua") != LUA_OK) {
         printf("Error loading game-example/game.lua: %s\n", lua_tostring(globalLuaState, -1));
         lua_pop(globalLuaState, 1);
     } else {
         printf("Game-example/game.lua loaded successfully\n");
+        load_palette_from_lua(globalLuaState);
     }
 
     SetTargetFPS(60);

@@ -1,6 +1,7 @@
 #include <lua.h>
 #include <lualib.h>
 #include <lauxlib.h>
+#include <stdio.h>
 
 #include "drawlist.h"
 #include "raylib.h"
@@ -140,28 +141,58 @@ int lua_palset(lua_State *L) {
 }
 
 //----------------------------------------------------------------------------------
-// ui.tile(spritesheet:int, tile_index:int, x:int, y:int)
+// ui.tile(spritesheet:table, tile_index:int, x:int, y:int)
 //----------------------------------------------------------------------------------
 int lua_tile(lua_State *L) {
-    int spritesheet = luaL_checkinteger(L, 1);
+    luaL_checktype(L, 1, LUA_TTABLE);
+
+    lua_getfield(L, 1, "data");
+    const char *data = luaL_checkstring(L, -1);
+    lua_pop(L, 1);
+
+    lua_getfield(L, 1, "width");
+    int width = luaL_checkinteger(L, -1);
+    lua_pop(L, 1);
+
+    lua_getfield(L, 1, "height");
+    int height = luaL_checkinteger(L, -1);
+    lua_pop(L, 1);
+
     int tile_index = luaL_checkinteger(L, 2);
     int x = luaL_checkinteger(L, 3);
     int y = luaL_checkinteger(L, 4);
 
-    add_tile(spritesheet, tile_index, x, y);
+    add_tile(data, width, height, tile_index, x, y);
 
     return 0;
 }
 
 //----------------------------------------------------------------------------------
-// ui.spr(spritesheet:int, x:int, y:int)
+// ui.spr(spritesheet:table, x:int, y:int)
 //----------------------------------------------------------------------------------
 int lua_spr(lua_State *L) {
-    int spritesheet = luaL_checkinteger(L, 1);
+    luaL_checktype(L, 1, LUA_TTABLE);
+
+    lua_getfield(L, 1, "data");
+    const char *data = luaL_checkstring(L, -1);
+    lua_pop(L, 1);
+
+    lua_getfield(L, 1, "width");
+    int width = luaL_checkinteger(L, -1);
+    lua_pop(L, 1);
+
+    lua_getfield(L, 1, "height");
+    int height = luaL_checkinteger(L, -1);
+    lua_pop(L, 1);
+
+    lua_getfield(L, 1, "ntiles");
+    int ntiles = luaL_checkinteger(L, -1);
+    lua_pop(L, 1);
+
     int x = luaL_checkinteger(L, 2);
     int y = luaL_checkinteger(L, 3);
 
-    add_sprite(spritesheet, x, y);
+    add_sprite(data, width, height, ntiles, x, y);
 
     return 0;
 }
@@ -193,32 +224,12 @@ int lua_btnp(lua_State *L) {
 }
 
 //----------------------------------------------------------------------------------
-// require("sprites") - returns SpriteSheets table
+// ui.log(message:string)
 //----------------------------------------------------------------------------------
-extern int get_sprite_count();
-extern const char* get_sprite_name_at(int idx);
-extern int get_sprite_index_at(int idx);
-
-int lua_require_sprites(lua_State *L) {
-    // Create SpriteSheets table
-    lua_newtable(L);
-
-    int sprite_count = get_sprite_count();
-    for (int i = 0; i < sprite_count; i++) {
-        const char* name = get_sprite_name_at(i);
-        int index = get_sprite_index_at(i);
-
-        if (name) {
-            lua_pushinteger(L, index);
-            lua_setfield(L, -2, name);
-        }
-    }
-
-    // Set as global SpriteSheets
-    lua_pushvalue(L, -1);
-    lua_setglobal(L, "SpriteSheets");
-
-    return 1;
+int lua_log(lua_State *L) {
+    char *message = luaL_checkstring(L, 1);
+    printf("[LUPINHO] %s\n", message);
+    return 0;
 }
 
 // TODO
@@ -305,4 +316,45 @@ int lua_fillp(lua_State *L) {
     int pattern_bytes = luaL_checkinteger(L, 1);
 
     return 0;
+}
+
+//----------------------------------------------------------------------------------
+// Load palette from Lua global table "Palette"
+// Reads the Palette table and populates the C palette array using palset()
+//----------------------------------------------------------------------------------
+void load_palette_from_lua(lua_State *L) {
+    lua_getglobal(L, "Palette");
+
+    if (!lua_istable(L, -1)) {
+        printf("Warning: Palette table not found in Lua state\n");
+        lua_pop(L, 1);
+        return;
+    }
+
+    int table_len = (int)luaL_len(L, -1);
+
+    if (table_len == 0) {
+        printf("Warning: Palette table is empty\n");
+        lua_pop(L, 1);
+        return;
+    }
+
+    printf("Loading %d colors from Palette table\n", table_len);
+
+    for (int i = 1; i <= table_len && i <= PALETTE_SIZE; i++) {
+        lua_rawgeti(L, -1, i);
+
+        if (lua_isnumber(L, -1)) {
+            int bgr555 = (int)lua_tointeger(L, -1);
+            palset(i - 1, bgr555);
+        } else {
+            printf("Warning: Palette[%d] is not a number, skipping\n", i);
+        }
+
+        lua_pop(L, 1);
+    }
+
+    lua_pop(L, 1);
+
+    printf("Palette loaded successfully\n");
 }
