@@ -5,9 +5,8 @@
 #include <string.h>
 #include <stdint.h>
 
-#define MAX_TEXT_LENGTH 100
-
 // Text
+#define MAX_TEXT_LENGTH 100
 typedef struct {
     char *text;
     int x;
@@ -57,24 +56,36 @@ typedef struct {
     Color color;
 } TriangleItem;
 
-// Tile
+// Sprite In Memory
+#define MAX_SPRITE_NAME_LENGTH 256
 typedef struct {
-    const char *data;
-    int width;
-    int height;
+    char name[MAX_SPRITE_NAME_LENGTH];
+    Texture2D texture;
+    int tile_width;
+    int tile_height;
+    int ntiles;
+} SpriteInMemory;
+
+// Sprites In Memory
+typedef struct {
+    SpriteInMemory **sprites;
+    int count;
+    int max_count;
+} SpritesInMemory;
+
+// Tile Drawable
+typedef struct {
+    SpriteInMemory *sprite_in_memory;
     int tile_index;
     int x;
     int y;
 } TileItem;
 
-// Sprite
+// Sprite Drawable
 typedef struct {
-    const char *data;
+    SpriteInMemory *sprite_in_memory;
     int x;
     int y;
-    int tile_width;
-    int tile_height;
-    int ntiles;
 } SpriteItem;
 
 // List Objects

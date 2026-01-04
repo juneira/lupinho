@@ -42,6 +42,7 @@ void clear_drawlist() {
     NodeDrawable *current = drawlist.root;
     while(current != NULL) {
         NodeDrawable *next = current->next;
+
         free(current->drawable);
         free(current);
         current = next;
@@ -186,43 +187,25 @@ void draw_triangle(TriangleItem *triangle) {
 /**
 Sprite Functions
 **/
-void add_sprite(const char *data, int width, int height, int ntiles, int x, int y) {
+void add_sprite(SpriteInMemory *sprite_in_memory, int x, int y) {
     SpriteItem *sprite = (SpriteItem *) malloc(sizeof(SpriteItem));
-    sprite->data = data;
-    sprite->tile_width = width;
-    sprite->tile_height = height;
+    sprite->sprite_in_memory = sprite_in_memory;
     sprite->x = x;
     sprite->y = y;
-    sprite->ntiles = ntiles;
 
     add_drawable(sprite, 'w');
 }
 
 void draw_sprite(SpriteItem *sprite) {
-    printf("Drawing sprite with %d tiles\n", sprite->ntiles);
-
-    int pixel_index = 0;
-
-    for(int tile_index = 0; tile_index < sprite->ntiles; tile_index++) {
-        for(int y = 0; y < sprite->tile_height; y++) {
-            for(int x = 0; x < sprite->tile_width; x++) {
-                int palette_idx = (int) sprite->data[pixel_index++];
-                if (palette_idx == 0) continue; // transparent
-                Color color = get_palette_color(palette_idx);
-                DrawPixel(sprite->x + x + (tile_index * sprite->tile_width), sprite->y + y, color);
-            }
-        }
-    }
+    DrawTexture(sprite->sprite_in_memory->texture, sprite->x, sprite->y, WHITE);
 }
 
 /**
 Tile Functions
 **/
-void add_tile(const char *data, int width, int height, int tile_index, int x, int y) {
+void add_tile(SpriteInMemory *sprite_in_memory, int tile_index, int x, int y) {
     TileItem *tile = (TileItem *) malloc(sizeof(TileItem));
-    tile->data = data;
-    tile->width = width;
-    tile->height = height;
+    tile->sprite_in_memory = sprite_in_memory;
     tile->tile_index = tile_index;
     tile->x = x;
     tile->y = y;
@@ -231,19 +214,18 @@ void add_tile(const char *data, int width, int height, int tile_index, int x, in
 }
 
 void draw_tile(TileItem *tile) {
-    int start_pixel = tile->tile_index * tile->width * tile->height;
+    // Calculate source rectangle based on tile_index
+    int src_x = tile->tile_index * tile->sprite_in_memory->tile_width;
+    int src_y = 0;
 
-    for(int y = 0; y < tile->height; y++) {
-        for(int x = 0; x < tile->width; x++) {
-            int pixel_index = start_pixel + y * tile->width + x;
-            int palette_idx = (int) tile->data[pixel_index];
-
-            if (palette_idx == 0) continue; // transparent
-
-            Color color = get_palette_color(palette_idx);
-            DrawPixel(tile->x + x, tile->y + y, color);
-        }
-    }
+    DrawTexturePro(
+        tile->sprite_in_memory->texture,
+        (Rectangle) { src_x, src_y, tile->sprite_in_memory->tile_width, tile->sprite_in_memory->tile_height },
+        (Rectangle) { tile->x, tile->y, tile->sprite_in_memory->tile_width, tile->sprite_in_memory->tile_height },
+        (Vector2) { 0, 0 },
+        0,
+        WHITE
+    );
 }
 
 /**
@@ -265,8 +247,66 @@ void palset(int position, int bgr555) {
 }
 
 Color get_palette_color(int index) {
-    if (index >= 0 && index < PALETTE_SIZE) {
-        return palette[index];
+    if (index == 0) {
+        return (Color) {0, 0, 0, 0}; // transparent
     }
-    return DARKGRAY; // fallback
+
+    return palette[index];
+}
+
+/**
+Sprites In Memory Functions
+**/
+Image sprite_in_memory_create_image_from_data(char *data, SpriteInMemory *sprite) {
+    int sprite_width = sprite->tile_width * sprite->ntiles;
+    int sprite_height = sprite->tile_height;
+
+    Image image = GenImageColor(sprite_width, sprite_height, BLANK);
+
+    Color *pixels = (Color *)image.data;
+
+    int data_index = 0;
+    for(int tile_index = 0; tile_index < sprite->ntiles; tile_index++) {
+        for(int y = 0; y < sprite->tile_height; y++) {
+            for(int x = 0; x < sprite->tile_width; x++) {
+                int pixel_index = (x + (tile_index * sprite->tile_width)) + (sprite_width * y);
+
+                pixels[pixel_index] = get_palette_color((int) data[data_index++]);
+            }
+        }
+    }
+
+    return image;
+}
+
+void add_sprite_in_memory(char *name, char *data, int width, int height, int ntiles) {
+    SpriteInMemory *sprite = (SpriteInMemory *) malloc(sizeof(SpriteInMemory));
+    strcpy(sprite->name, name);
+    sprite->tile_width = width;
+    sprite->tile_height = height;
+    sprite->ntiles = ntiles;
+
+    Image image = sprite_in_memory_create_image_from_data(data, sprite);
+    sprite->texture = LoadTextureFromImage(image);
+    UnloadImage(image);
+
+    sprites_in_memory.count++;
+
+    if (sprites_in_memory.count >= sprites_in_memory.max_count) {
+        sprites_in_memory.max_count *= 2;
+        sprites_in_memory.sprites = (SpriteInMemory **) realloc(sprites_in_memory.sprites, sizeof(SpriteInMemory *) * sprites_in_memory.max_count);
+    }
+
+    sprites_in_memory.sprites[sprites_in_memory.count - 1] = sprite;
+
+    printf("Sprite %s added to sprites in memory\n", name);
+}
+
+SpriteInMemory* get_sprite_in_memory(char *name) {
+    for(int i = 0; i < sprites_in_memory.count; i++) {
+        if(strcmp(sprites_in_memory.sprites[i]->name, name) == 0) {
+            return sprites_in_memory.sprites[i];
+        }
+    }
+    return NULL;
 }

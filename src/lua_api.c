@@ -1,7 +1,8 @@
+#include <stdio.h>
+#include <string.h>
 #include <lua.h>
 #include <lualib.h>
 #include <lauxlib.h>
-#include <stdio.h>
 
 #include "drawlist.h"
 #include "raylib.h"
@@ -146,23 +147,17 @@ int lua_palset(lua_State *L) {
 int lua_tile(lua_State *L) {
     luaL_checktype(L, 1, LUA_TTABLE);
 
-    lua_getfield(L, 1, "data");
-    const char *data = luaL_checkstring(L, -1);
-    lua_pop(L, 1);
-
-    lua_getfield(L, 1, "width");
-    int width = luaL_checkinteger(L, -1);
-    lua_pop(L, 1);
-
-    lua_getfield(L, 1, "height");
-    int height = luaL_checkinteger(L, -1);
+    lua_getfield(L, 1, "name");
+    const char *name = luaL_checkstring(L, -1);
     lua_pop(L, 1);
 
     int tile_index = luaL_checkinteger(L, 2);
     int x = luaL_checkinteger(L, 3);
     int y = luaL_checkinteger(L, 4);
 
-    add_tile(data, width, height, tile_index, x, y);
+    SpriteInMemory *sprite_in_memory = get_sprite_in_memory(name);
+
+    add_tile(sprite_in_memory, tile_index, x, y);
 
     return 0;
 }
@@ -173,26 +168,16 @@ int lua_tile(lua_State *L) {
 int lua_spr(lua_State *L) {
     luaL_checktype(L, 1, LUA_TTABLE);
 
-    lua_getfield(L, 1, "data");
-    const char *data = luaL_checkstring(L, -1);
-    lua_pop(L, 1);
-
-    lua_getfield(L, 1, "width");
-    int width = luaL_checkinteger(L, -1);
-    lua_pop(L, 1);
-
-    lua_getfield(L, 1, "height");
-    int height = luaL_checkinteger(L, -1);
-    lua_pop(L, 1);
-
-    lua_getfield(L, 1, "ntiles");
-    int ntiles = luaL_checkinteger(L, -1);
+    lua_getfield(L, 1, "name");
+    const char *name = luaL_checkstring(L, -1);
     lua_pop(L, 1);
 
     int x = luaL_checkinteger(L, 2);
     int y = luaL_checkinteger(L, 3);
 
-    add_sprite(data, width, height, ntiles, x, y);
+    SpriteInMemory *sprite_in_memory = get_sprite_in_memory(name);
+
+    add_sprite(sprite_in_memory, x, y);
 
     return 0;
 }
@@ -319,42 +304,43 @@ int lua_fillp(lua_State *L) {
 }
 
 //----------------------------------------------------------------------------------
-// Load palette from Lua global table "Palette"
-// Reads the Palette table and populates the C palette array using palset()
+// Load sprites in memory from Lua global table "SpriteSheets"
+// Reads the SpriteSheets table and populates the C sprites in memory array using add_sprite_in_memory()
 //----------------------------------------------------------------------------------
-void load_palette_from_lua(lua_State *L) {
-    lua_getglobal(L, "Palette");
+void load_sprites_in_memory_from_lua(lua_State *L) {
+    lua_getglobal(L, "SpriteSheets");
 
     if (!lua_istable(L, -1)) {
-        printf("Warning: Palette table not found in Lua state\n");
+        printf("Warning: SpriteSheets table not found in Lua state\n");
         lua_pop(L, 1);
         return;
     }
 
-    int table_len = (int)luaL_len(L, -1);
+    lua_pushnil(L);
+    while(lua_next(L, -2) != 0) {
+        // Key is at -2, value is at -1
+        const char *name = lua_tostring(L, -2);
 
-    if (table_len == 0) {
-        printf("Warning: Palette table is empty\n");
+        lua_getfield(L, -1, "data");
+        const char *data = luaL_checkstring(L, -1);
         lua_pop(L, 1);
-        return;
-    }
 
-    printf("Loading %d colors from Palette table\n", table_len);
+        lua_getfield(L, -1, "width");
+        int width = luaL_checkinteger(L, -1);
+        lua_pop(L, 1);
 
-    for (int i = 1; i <= table_len && i <= PALETTE_SIZE; i++) {
-        lua_rawgeti(L, -1, i);
+        lua_getfield(L, -1, "height");
+        int height = luaL_checkinteger(L, -1);
+        lua_pop(L, 1);
 
-        if (lua_isnumber(L, -1)) {
-            int bgr555 = (int)lua_tointeger(L, -1);
-            palset(i - 1, bgr555);
-        } else {
-            printf("Warning: Palette[%d] is not a number, skipping\n", i);
-        }
+        lua_getfield(L, -1, "ntiles");
+        int ntiles = luaL_checkinteger(L, -1);
+        lua_pop(L, 1);
+
+        add_sprite_in_memory(name, data, width, height, ntiles);
 
         lua_pop(L, 1);
     }
 
     lua_pop(L, 1);
-
-    printf("Palette loaded successfully\n");
 }

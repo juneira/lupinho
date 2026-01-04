@@ -10,12 +10,14 @@ Global objects
 **/
 Drawlist drawlist;
 lua_State *globalLuaState = NULL;
+SpritesInMemory sprites_in_memory;
 
 /**
 Constants
 **/
 const int screenWidth = 480;
 const int screenHeight = 270;
+const int initial_sprites_in_memory_count = 10;
 
 #if defined(PLATFORM_WEB)
     #include <emscripten/emscripten.h>
@@ -55,9 +57,12 @@ void UpdateDrawFrame(void)
     clear_drawlist();
 }
 
-
 int main(void)
 {
+    sprites_in_memory.count = 0;
+    sprites_in_memory.max_count = initial_sprites_in_memory_count;
+    sprites_in_memory.sprites = (SpriteInMemory **) calloc(sprites_in_memory.max_count, sizeof(SpriteInMemory *));
+
     globalLuaState = luaL_newstate();
     luaL_openlibs(globalLuaState);
 
@@ -174,7 +179,7 @@ int main(void)
         lua_pop(globalLuaState, 1);
     } else {
         printf("Game-example/game.lua loaded successfully\n");
-        load_palette_from_lua(globalLuaState);
+        load_sprites_in_memory_from_lua(globalLuaState);
     }
 
     SetTargetFPS(60);
