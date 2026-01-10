@@ -219,24 +219,29 @@ void draw_sprite(SpriteItem *sprite) {
 /**
 Tile Functions
 **/
-void add_tile(SpriteInMemory *sprite_in_memory, int tile_index, int x, int y) {
+void add_tile(SpriteInMemory *sprite_in_memory, int tile_index, int x, int y, bool flipped) {
     TileItem *tile = (TileItem *) malloc(sizeof(TileItem));
     tile->sprite_in_memory = sprite_in_memory;
     tile->tile_index = tile_index;
     tile->x = x;
     tile->y = y;
+    tile->flipped = flipped;
 
     add_drawable(tile, 's');
 }
 
 void draw_tile(TileItem *tile) {
-    // Calculate source rectangle based on tile_index
     int src_x = tile->tile_index * tile->sprite_in_memory->tile_width;
     int src_y = 0;
+    int src_width = tile->sprite_in_memory->tile_width;
+
+    if (tile->flipped) {
+        src_width = -src_width;
+    }
 
     DrawTexturePro(
         tile->sprite_in_memory->texture,
-        (Rectangle) { src_x, src_y, tile->sprite_in_memory->tile_width, tile->sprite_in_memory->tile_height },
+        (Rectangle) { src_x, src_y, src_width, tile->sprite_in_memory->tile_height },
         (Rectangle) { tile->x, tile->y, tile->sprite_in_memory->tile_width, tile->sprite_in_memory->tile_height },
         (Vector2) { 0, 0 },
         0,

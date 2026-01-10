@@ -79,6 +79,7 @@ typedef struct {
     int tile_index;
     int x;
     int y;
+    bool flipped;
 } TileItem;
 
 // Sprite Drawable

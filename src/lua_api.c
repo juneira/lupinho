@@ -143,6 +143,7 @@ int lua_palset(lua_State *L) {
 
 //----------------------------------------------------------------------------------
 // ui.tile(spritesheet:table, tile_index:int, x:int, y:int)
+// tile_index can have bit 10 (1024) set to flip horizontally
 //----------------------------------------------------------------------------------
 int lua_tile(lua_State *L) {
     luaL_checktype(L, 1, LUA_TTABLE);
@@ -151,13 +152,16 @@ int lua_tile(lua_State *L) {
     const char *name = luaL_checkstring(L, -1);
     lua_pop(L, 1);
 
-    int tile_index = luaL_checkinteger(L, 2);
+    int tile_index_with_flags = luaL_checkinteger(L, 2);
     int x = luaL_checkinteger(L, 3);
     int y = luaL_checkinteger(L, 4);
 
+    bool flipped = (tile_index_with_flags & 1024) != 0;
+    int tile_index = tile_index_with_flags & ~1024;
+
     SpriteInMemory *sprite_in_memory = get_sprite_in_memory(name);
 
-    add_tile(sprite_in_memory, tile_index, x, y);
+    add_tile(sprite_in_memory, tile_index, x, y, flipped);
 
     return 0;
 }

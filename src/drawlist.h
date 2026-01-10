@@ -27,7 +27,7 @@ void draw_circle(CircleItem *circle);
 void add_triangle(int p1_x, int p1_y, int p2_x, int p2_y, int p3_x, int p3_y, Color color);
 void draw_triangle(TriangleItem *triangle);
 
-void add_tile(SpriteInMemory *sprite_in_memory, int tile_index, int x, int y);
+void add_tile(SpriteInMemory *sprite_in_memory, int tile_index, int x, int y, bool flipped);
 void draw_tile(TileItem *tile);
 void add_sprite(SpriteInMemory *sprite_in_memory, int x, int y, bool flipped);
 void draw_sprite(SpriteItem *sprite);
