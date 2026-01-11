@@ -218,6 +218,16 @@ int lua_btnp(lua_State *L) {
 }
 
 //----------------------------------------------------------------------------------
+// ui.cls(color:int)
+//----------------------------------------------------------------------------------
+int lua_cls(lua_State *L) {
+    int color = luaL_checkinteger(L, 1);
+    add_clear(get_palette_color(color));
+
+    return 0;
+}
+
+//----------------------------------------------------------------------------------
 // ui.log(message:string)
 //----------------------------------------------------------------------------------
 int lua_log(lua_State *L) {
@@ -270,15 +280,6 @@ int lua_clip(lua_State *L) {
     int y = luaL_checkinteger(L, 2);
     int width = luaL_checkinteger(L, 3);
     int height = luaL_checkinteger(L, 4);
-
-    return 0;
-}
-
-//----------------------------------------------------------------------------------
-// ui.cls(color:int)
-//----------------------------------------------------------------------------------
-int lua_cls(lua_State *L) {
-    int color = luaL_checkinteger(L, 1);
 
     return 0;
 }

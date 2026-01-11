@@ -47,6 +47,9 @@ void draw(NodeDrawable *node) {
         case 'c':
             draw_circle((CircleItem *) node->drawable);
             break;
+        case 'y':
+            draw_clear((ClearItem *) node->drawable);
+            break;
         case 'v':
             draw_triangle((TriangleItem *) node->drawable);
             break;
@@ -337,6 +340,20 @@ Color get_palette_color(int index) {
     }
 
     return palette[index];
+}
+
+/**
+Clear Functions
+**/
+void add_clear(Color color) {
+    ClearItem *clear = (ClearItem *) malloc(sizeof(ClearItem));
+    clear->color = color;
+
+    add_drawable(clear, 'y');
+}
+
+void draw_clear(ClearItem *clear) {
+    ClearBackground(clear->color);
 }
 
 /**

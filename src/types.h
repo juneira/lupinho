@@ -92,6 +92,11 @@ typedef struct {
     bool flipped;
 } SpriteItem;
 
+// Clear Drawable
+typedef struct {
+    Color color;
+} ClearItem;
+
 // List Objects
 typedef struct NodeDrawable NodeDrawable;
 
