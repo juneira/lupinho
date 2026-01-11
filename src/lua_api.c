@@ -226,6 +226,30 @@ int lua_log(lua_State *L) {
     return 0;
 }
 
+//----------------------------------------------------------------------------------
+// ui.fillp([pattern_bytes...])
+//----------------------------------------------------------------------------------
+int lua_fillp(lua_State *L) {
+    int nargs = lua_gettop(L);
+
+    if (nargs == 0) {
+        memset(fill_pattern, 0, sizeof(fill_pattern));
+        return 0;
+    }
+
+    for (int i = 0; i < nargs && i < 8; i++) {
+        fill_pattern[i] = (uint8_t)luaL_checkinteger(L, i + 1);
+    }
+
+    // Fill remaining bytes with 0 if fewer than 8 arguments
+    for (int i = nargs; i < 8; i++) {
+        fill_pattern[i] = 0;
+    }
+
+    return 0;
+}
+
+
 // TODO
 
 //----------------------------------------------------------------------------------
@@ -299,15 +323,6 @@ int lua_set_pallet(lua_State *L) {
     int start_index = luaL_checkinteger(L, 1);
     int count = luaL_checkinteger(L, 2);
     luaL_checktype(L, 3, LUA_TTABLE);  // Check that argument 3 is a table
-
-    return 0;
-}
-
-//----------------------------------------------------------------------------------
-// ui.fillp([pattern_bytes...])
-//----------------------------------------------------------------------------------
-int lua_fillp(lua_State *L) {
-    int pattern_bytes = luaL_checkinteger(L, 1);
 
     return 0;
 }

@@ -41,6 +41,11 @@ void palset(int position, int bgr555);
 Color get_palette_color(int index);
 
 /*
+Fill Pattern Functions
+*/
+extern uint8_t fill_pattern[8];
+
+/*
 Sprites In Memory Functions
 */
 extern SpritesInMemory sprites_in_memory;
@@ -65,6 +70,8 @@ int lua_spr(lua_State *L);
 int lua_require_sprites(lua_State *L);
 int lua_btn(lua_State *L);
 int lua_btnp(lua_State *L);
+int lua_fillp(lua_State *L);
+int lua_log(lua_State *L);
 
 // TODO
 int lua_camera(lua_State *L);
@@ -74,6 +81,4 @@ int lua_preload_spritesheet(lua_State *L);
 int lua_draw_sprite(lua_State *L);
 int lua_print(lua_State *L);
 int lua_set_pallet(lua_State *L);
-int lua_fillp(lua_State *L);
-int lua_log(lua_State *L);
 #endif

@@ -10,6 +10,27 @@ extern Drawlist drawlist;
 Color palette[PALETTE_SIZE];
 
 /*
+Fill pattern
+*/
+uint8_t fill_pattern[8] = {0, 0, 0, 0, 0, 0, 0, 0};
+
+bool should_draw_pixel_with_pattern(int x, int y, uint8_t pattern[8]) {
+    bool is_solid = true;
+    for (int i = 0; i < 8; i++) {
+        if (pattern[i] != 0) {
+            is_solid = false;
+            break;
+        }
+    }
+    if (is_solid) return true;
+
+    int row = y & 7;
+    int col = x & 7;
+
+    return (pattern[row] & (1 << (7 - col))) != 0;
+}
+
+/*
 Drawable Functions
 */
 void draw(NodeDrawable *node) {
@@ -122,13 +143,32 @@ void add_rect(int x, int y, int width, int height, bool filled, Color color) {
     rect->height = height;
     rect->filled = filled;
     rect->color = color;
+    memcpy(rect->fill_pattern, fill_pattern, sizeof(fill_pattern));
 
     add_drawable(rect, 'r');
 }
 
 void draw_rect(RectItem *rect) {
     if(rect->filled) {
-        DrawRectangle(rect->x, rect->y, rect->width, rect->height, rect->color);
+        bool has_pattern = false;
+        for (int i = 0; i < 8; i++) {
+            if (rect->fill_pattern[i] != 0) {
+                has_pattern = true;
+                break;
+            }
+        }
+
+        if (has_pattern) {
+            for (int y = rect->y; y < rect->y + rect->height; y++) {
+                for (int x = rect->x; x < rect->x + rect->width; x++) {
+                    if (should_draw_pixel_with_pattern(x, y, rect->fill_pattern)) {
+                        DrawPixel(x, y, rect->color);
+                    }
+                }
+            }
+        } else {
+            DrawRectangle(rect->x, rect->y, rect->width, rect->height, rect->color);
+        }
     } else {
         DrawRectangleLines(rect->x, rect->y, rect->width, rect->height, rect->color);
     }
@@ -146,13 +186,37 @@ void add_circle(int center_x, int center_y, int radius, bool filled, Color color
     circle->color = color;
     circle->has_border = has_border;
     circle->border_color = border_color;
+    memcpy(circle->fill_pattern, fill_pattern, sizeof(fill_pattern));
 
     add_drawable(circle, 'c');
 }
 
 void draw_circle(CircleItem *circle) {
     if(circle->filled) {
-        DrawCircle(circle->center_x, circle->center_y, circle->radius, circle->color);
+        bool has_pattern = false;
+        for (int i = 0; i < 8; i++) {
+            if (circle->fill_pattern[i] != 0) {
+                has_pattern = true;
+                break;
+            }
+        }
+
+        if (has_pattern) {
+            int radius_squared = circle->radius * circle->radius;
+            for (int y = circle->center_y - circle->radius; y <= circle->center_y + circle->radius; y++) {
+                for (int x = circle->center_x - circle->radius; x <= circle->center_x + circle->radius; x++) {
+                    int dx = x - circle->center_x;
+                    int dy = y - circle->center_y;
+                    if (dx * dx + dy * dy <= radius_squared) {
+                        if (should_draw_pixel_with_pattern(x, y, circle->fill_pattern)) {
+                            DrawPixel(x, y, circle->color);
+                        }
+                    }
+                }
+            }
+        } else {
+            DrawCircle(circle->center_x, circle->center_y, circle->radius, circle->color);
+        }
     }
 
     if(circle->has_border) {

@@ -32,6 +32,7 @@ typedef struct {
     int height;
     bool filled;
     Color color;
+    uint8_t fill_pattern[8];
 } RectItem;
 
 // Circle
@@ -43,6 +44,7 @@ typedef struct {
     bool has_border;
     Color border_color;
     Color color;
+    uint8_t fill_pattern[8];
 } CircleItem;
 
 // Triangle
