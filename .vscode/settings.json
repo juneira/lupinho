@@ -1,5 +1,5 @@
 {
-  "editor.tabSize": 4,
+  "editor.tabSize": 2,
   "editor.insertSpaces": true,
   "editor.detectIndentation": false,
   "[c]": {
@@ -7,6 +7,8 @@
     "editor.insertSpaces": true,
     "editor.detectIndentation": false,
     "editor.defaultFormatter": null
-},
-"cmake.sourceDirectory": "/lupinho/src/libs/raylib-web",
+  },
+  "cmake.sourceDirectory": "/lupinho/src/libs/raylib-web",
+  "files.insertFinalNewline": true,
+  "files.trimTrailingWhitespace": true
 }

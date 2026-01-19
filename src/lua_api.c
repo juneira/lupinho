@@ -192,13 +192,41 @@ int lua_spr(lua_State *L) {
 }
 
 //----------------------------------------------------------------------------------
+// Helper function to get the keyboard key corresponding to a gamepad button
+//----------------------------------------------------------------------------------
+static int get_keyboard_key_for_button(int button) {
+    switch (button) {
+        // D-pad / Arrow keys
+        case GAMEPAD_BUTTON_LEFT_FACE_UP:    return KEY_UP;
+        case GAMEPAD_BUTTON_LEFT_FACE_DOWN:  return KEY_DOWN;
+        case GAMEPAD_BUTTON_LEFT_FACE_LEFT:  return KEY_LEFT;
+        case GAMEPAD_BUTTON_LEFT_FACE_RIGHT: return KEY_RIGHT;
+        // Action buttons
+        case GAMEPAD_BUTTON_RIGHT_FACE_RIGHT: return KEY_Z;  // BTN_Z
+        case GAMEPAD_BUTTON_RIGHT_FACE_DOWN:  return KEY_Z;  // BTN_Z (alternative)
+        case GAMEPAD_BUTTON_RIGHT_FACE_UP:    return KEY_X;  // BTN_Q
+        case GAMEPAD_BUTTON_RIGHT_FACE_LEFT:  return KEY_A;  // BTN_E
+        default: return -1;
+    }
+}
+
+//----------------------------------------------------------------------------------
 // ui.btn(button:int, pad:int) -> bool
+// Checks both gamepad and keyboard input
 //----------------------------------------------------------------------------------
 int lua_btn(lua_State *L) {
     int button = luaL_checkinteger(L, 1);
     int pad = luaL_optinteger(L, 2, 0);
 
     bool is_down = IsGamepadButtonDown(pad, button);
+
+    if (!is_down) {
+        int key = get_keyboard_key_for_button(button);
+        if (key != -1) {
+            is_down = IsKeyDown(key);
+        }
+    }
+
     lua_pushboolean(L, is_down);
 
     return 1;
@@ -206,12 +234,21 @@ int lua_btn(lua_State *L) {
 
 //----------------------------------------------------------------------------------
 // ui.btnp(button:int, pad:int) -> bool
+// Checks both gamepad and keyboard input (pressed this frame)
 //----------------------------------------------------------------------------------
 int lua_btnp(lua_State *L) {
     int button = luaL_checkinteger(L, 1);
     int pad = luaL_optinteger(L, 2, 0);
 
     bool is_pressed = IsGamepadButtonPressed(pad, button);
+
+    if (!is_pressed) {
+        int key = get_keyboard_key_for_button(button);
+        if (key != -1) {
+            is_pressed = IsKeyPressed(key);
+        }
+    }
+
     lua_pushboolean(L, is_pressed);
 
     return 1;
