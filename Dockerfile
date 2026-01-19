@@ -1,22 +1,32 @@
-FROM alpine:3.23.2
+FROM debian:bookworm-slim
 
 WORKDIR /lupinho
 
-RUN apk update && apk add --no-cache \
+RUN apt-get update && apt-get install -y --no-install-recommends \
     cmake \
     make \
-    libuv-dev \
+    libuv1-dev \
     libc-dev \
-    readline-dev \
+    libreadline-dev \
     gcc \
     g++ \
     git \
-    openssl-dev \
+    libssl-dev \
     wget \
     curl \
     unzip \
-    musl-dev \
-    bash
+    bash \
+    python3 \
+    ca-certificates \
+    xz-utils \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install Emscripten
+RUN git clone https://github.com/emscripten-core/emsdk.git /opt/emsdk && \
+    cd /opt/emsdk && \
+    ./emsdk install latest && \
+    ./emsdk activate latest && \
+    echo 'source /opt/emsdk/emsdk_env.sh' >> ~/.bashrc
 
 # Install Lua 5.1
 RUN wget https://www.lua.org/ftp/lua-5.1.5.tar.gz && \
