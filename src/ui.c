@@ -237,9 +237,9 @@ void palset(int position, int bgr555) {
     if (position < 0 || position >= PALETTE_SIZE) return;
 
     // Extract BGR555 components (5 bits each)
-    int r5 = (bgr555 >> 0) & 0x1F;
+    int b5 = (bgr555 >> 0) & 0x1F;
     int g5 = (bgr555 >> 5) & 0x1F;
-    int b5 = (bgr555 >> 10) & 0x1F;
+    int r5 = (bgr555 >> 10) & 0x1F;
 
     // Scale from 5-bit (0-31) to 8-bit (0-255)
     palette[position].r = (r5 << 3) | (r5 >> 2);
