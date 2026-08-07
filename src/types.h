@@ -72,4 +72,12 @@ typedef struct {
     int count;      // map_width * map_height
 } MapLayerData;
 
+//----------------------------------------------------------------------------------
+// Keyboard
+//----------------------------------------------------------------------------------
+typedef struct {
+    int key;
+    int alt_key;
+} KeyboardKeyData;
+
 #endif // TYPES_H
