@@ -220,22 +220,50 @@ int lua_spr(lua_State *L) {
 //----------------------------------------------------------------------------------
 // Helper function to get the keyboard key corresponding to a gamepad button
 //----------------------------------------------------------------------------------
-static int get_keyboard_key_for_button(int button) {
+static KeyboardKeyData get_keyboard_key_data_for_button(int pad, int button) {
+    if (pad != keyboard_pad) { return -1; }
+
+    KeyboardKeyData kbd = {-1, -1};
     switch (button) {
-        // D-pad / AWSD keys
-        case GAMEPAD_BUTTON_LEFT_FACE_UP:    return KEY_W;
-        case GAMEPAD_BUTTON_LEFT_FACE_DOWN:  return KEY_S;
-        case GAMEPAD_BUTTON_LEFT_FACE_LEFT:  return KEY_A;
-        case GAMEPAD_BUTTON_LEFT_FACE_RIGHT: return KEY_D;
+        // D-pad / AWSD keys / arrow keys
+        case GAMEPAD_BUTTON_LEFT_FACE_UP:
+            kbd.key = KEY_W;
+            kbd.alt_key = KEY_UP;
+            break;
+        case GAMEPAD_BUTTON_LEFT_FACE_DOWN:
+            kbd.key = KEY_S;
+            kbd.alt_key = KEY_DOWN;
+            break;
+        case GAMEPAD_BUTTON_LEFT_FACE_LEFT:
+            kbd.key = KEY_A;
+            kbd.alt_key = KEY_LEFT;
+            break;
+        case GAMEPAD_BUTTON_LEFT_FACE_RIGHT:
+            kbd.key = KEY_D;
+            kbd.alt_key = KEY_RIGHT;
+            break;
+
         // Action buttons
-        case GAMEPAD_BUTTON_RIGHT_FACE_RIGHT: return KEY_J;
-        case GAMEPAD_BUTTON_RIGHT_FACE_DOWN:  return KEY_K;
-        case GAMEPAD_BUTTON_RIGHT_FACE_UP:    return KEY_L;
-        case GAMEPAD_BUTTON_RIGHT_FACE_LEFT:  return KEY_M;
-        case GAMEPAD_BUTTON_LEFT_TRIGGER_1:   return KEY_G;
-        case GAMEPAD_BUTTON_RIGHT_TRIGGER_1:  return KEY_H;
-        default: return -1;
+        case GAMEPAD_BUTTON_RIGHT_FACE_RIGHT:
+            kbd.key = KEY_J;
+            break;
+        case GAMEPAD_BUTTON_RIGHT_FACE_DOWN:
+            kdb.key = KEY_K;
+            break;
+        case GAMEPAD_BUTTON_RIGHT_FACE_UP:
+            kdb.key = KEY_L;
+            break;
+        case GAMEPAD_BUTTON_RIGHT_FACE_LEFT:
+            kdb.key = KEY_M;
+            break;
+        case GAMEPAD_BUTTON_LEFT_TRIGGER_1:
+            kdb.key = KEY_G;
+            break;
+        case GAMEPAD_BUTTON_RIGHT_TRIGGER_1:
+            kdb.key = KEY_H;
+            break;
     }
+    return kbd;
 }
 
 //----------------------------------------------------------------------------------
@@ -249,9 +277,12 @@ int lua_btn(lua_State *L) {
     bool is_down = IsGamepadButtonDown(pad, button);
 
     if (!is_down) {
-        int key = get_keyboard_key_for_button(button);
-        if (key != -1) {
-            is_down = IsKeyDown(key);
+        int key_data = get_keyboard_key_data_for_button(pad, button);
+        if (key_data.key != -1) {
+            is_down = IsKeyDown(key_data.key);
+            if (!is_down && key_data.alt_key != -1) {
+                is_down = IsKeyDown(key_data.alt_key);
+            }
         }
     }
 
@@ -271,15 +302,28 @@ int lua_btnp(lua_State *L) {
     bool is_pressed = IsGamepadButtonPressed(pad, button);
 
     if (!is_pressed) {
-        int key = get_keyboard_key_for_button(button);
-        if (key != -1) {
-            is_pressed = IsKeyPressed(key);
+        int key_data = get_keyboard_key_data_for_button(pad, button);
+        if (key_data.key != -1) {
+            is_pressed = IsKeyPressed(key_data.key);
+            if (!is_pressed && key_data.alt_key != -1) {
+                is_pressed = IsKeyPressed(key_data.alt_key);
+            }
         }
     }
 
     lua_pushboolean(L, is_pressed);
 
     return 1;
+}
+
+//----------------------------------------------------------------------------------
+// ui.set_kbd(pad:number)
+// Sets keyboard pad number
+//----------------------------------------------------------------------------------
+int lua_set_kbd(lua_State *L) {
+    int pad = (int)luaL_checknumber(L, 1);
+    set_keyboard_pad(pad);
+    return 0;
 }
 
 //----------------------------------------------------------------------------------
@@ -748,6 +792,9 @@ void lua_api_init(void) {
 
     lua_pushcfunction(globalLuaState, lua_btnp);
     lua_setfield(globalLuaState, -2, "btnp");
+
+    lua_pushcfunction(globalLuaState, lua_set_kbd);
+    lua_setfield(globalLuaState, -2, "set_kbd");
 
     lua_pushcfunction(globalLuaState, lua_log);
     lua_setfield(globalLuaState, -2, "log");
