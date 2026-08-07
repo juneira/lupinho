@@ -221,9 +221,10 @@ int lua_spr(lua_State *L) {
 // Helper function to get the keyboard key corresponding to a gamepad button
 //----------------------------------------------------------------------------------
 static KeyboardKeyData get_keyboard_key_data_for_button(int pad, int button) {
-    if (pad != keyboard_pad) { return -1; }
-
     KeyboardKeyData kbd = {-1, -1};
+
+    if (pad != keyboard_pad) { return kbd; }
+
     switch (button) {
         // D-pad / AWSD keys / arrow keys
         case GAMEPAD_BUTTON_LEFT_FACE_UP:
@@ -248,19 +249,19 @@ static KeyboardKeyData get_keyboard_key_data_for_button(int pad, int button) {
             kbd.key = KEY_J;
             break;
         case GAMEPAD_BUTTON_RIGHT_FACE_DOWN:
-            kdb.key = KEY_K;
+            kbd.key = KEY_K;
             break;
         case GAMEPAD_BUTTON_RIGHT_FACE_UP:
-            kdb.key = KEY_L;
+            kbd.key = KEY_L;
             break;
         case GAMEPAD_BUTTON_RIGHT_FACE_LEFT:
-            kdb.key = KEY_M;
+            kbd.key = KEY_M;
             break;
         case GAMEPAD_BUTTON_LEFT_TRIGGER_1:
-            kdb.key = KEY_G;
+            kbd.key = KEY_G;
             break;
         case GAMEPAD_BUTTON_RIGHT_TRIGGER_1:
-            kdb.key = KEY_H;
+            kbd.key = KEY_H;
             break;
     }
     return kbd;
@@ -277,7 +278,7 @@ int lua_btn(lua_State *L) {
     bool is_down = IsGamepadButtonDown(pad, button);
 
     if (!is_down) {
-        int key_data = get_keyboard_key_data_for_button(pad, button);
+        KeyboardKeyData key_data = get_keyboard_key_data_for_button(pad, button);
         if (key_data.key != -1) {
             is_down = IsKeyDown(key_data.key);
             if (!is_down && key_data.alt_key != -1) {
@@ -302,7 +303,7 @@ int lua_btnp(lua_State *L) {
     bool is_pressed = IsGamepadButtonPressed(pad, button);
 
     if (!is_pressed) {
-        int key_data = get_keyboard_key_data_for_button(pad, button);
+        KeyboardKeyData key_data = get_keyboard_key_data_for_button(pad, button);
         if (key_data.key != -1) {
             is_pressed = IsKeyPressed(key_data.key);
             if (!is_pressed && key_data.alt_key != -1) {
