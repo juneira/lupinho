@@ -221,50 +221,50 @@ int lua_spr(lua_State *L) {
 // Helper function to get the keyboard key corresponding to a gamepad button
 //----------------------------------------------------------------------------------
 static KeyboardKeyData get_keyboard_key_data_for_button(int pad, int button) {
-    KeyboardKeyData kbd = {-1, -1};
+    KeyboardKeyData key_data = {-1, -1};
 
-    if (keyboard_pad != -1 && pad != keyboard_pad) { return kbd; }
+    if (keyboard_pad != -1 && pad != keyboard_pad) { return key_data; }
 
     switch (button) {
         // D-pad / AWSD keys / arrow keys
         case GAMEPAD_BUTTON_LEFT_FACE_UP:
-            kbd.key = KEY_W;
-            kbd.alt_key = KEY_UP;
+            key_data.key = KEY_W;
+            key_data.alt_key = KEY_UP;
             break;
         case GAMEPAD_BUTTON_LEFT_FACE_DOWN:
-            kbd.key = KEY_S;
-            kbd.alt_key = KEY_DOWN;
+            key_data.key = KEY_S;
+            key_data.alt_key = KEY_DOWN;
             break;
         case GAMEPAD_BUTTON_LEFT_FACE_LEFT:
-            kbd.key = KEY_A;
-            kbd.alt_key = KEY_LEFT;
+            key_data.key = KEY_A;
+            key_data.alt_key = KEY_LEFT;
             break;
         case GAMEPAD_BUTTON_LEFT_FACE_RIGHT:
-            kbd.key = KEY_D;
-            kbd.alt_key = KEY_RIGHT;
+            key_data.key = KEY_D;
+            key_data.alt_key = KEY_RIGHT;
             break;
 
         // Action buttons
         case GAMEPAD_BUTTON_RIGHT_FACE_RIGHT:
-            kbd.key = KEY_J;
+            key_data.key = KEY_J;
             break;
         case GAMEPAD_BUTTON_RIGHT_FACE_DOWN:
-            kbd.key = KEY_K;
+            key_data.key = KEY_K;
             break;
         case GAMEPAD_BUTTON_RIGHT_FACE_UP:
-            kbd.key = KEY_L;
+            key_data.key = KEY_L;
             break;
         case GAMEPAD_BUTTON_RIGHT_FACE_LEFT:
-            kbd.key = KEY_M;
+            key_data.key = KEY_M;
             break;
         case GAMEPAD_BUTTON_LEFT_TRIGGER_1:
-            kbd.key = KEY_G;
+            key_data.key = KEY_G;
             break;
         case GAMEPAD_BUTTON_RIGHT_TRIGGER_1:
-            kbd.key = KEY_H;
+            key_data.key = KEY_H;
             break;
     }
-    return kbd;
+    return key_data;
 }
 
 //----------------------------------------------------------------------------------
