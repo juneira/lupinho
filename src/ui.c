@@ -471,3 +471,11 @@ void draw_map_layer(MapLayerData *data, int map_width, int tile_size, int cam_x,
 
     free(file_buf);
 }
+
+//----------------------------------------------------------------------------------
+// Keyboard Functions
+//----------------------------------------------------------------------------------
+int keyboard_pad = -1;
+void set_keyboard_pad(int pad) {
+    keyboard_pad = pad;
+}
