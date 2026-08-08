@@ -223,7 +223,7 @@ int lua_spr(lua_State *L) {
 static KeyboardKeyData get_keyboard_key_data_for_button(int pad, int button) {
     KeyboardKeyData kbd = {-1, -1};
 
-    if (pad != -1 && pad != keyboard_pad) { return kbd; }
+    if (keyboard_pad != -1 && pad != keyboard_pad) { return kbd; }
 
     switch (button) {
         // D-pad / AWSD keys / arrow keys
