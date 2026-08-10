@@ -104,6 +104,25 @@ int lua_draw_circle(lua_State *L) {
 }
 
 //----------------------------------------------------------------------------------
+// ui.circ(x, y, radius, color)
+//----------------------------------------------------------------------------------
+int lua_circ(lua_State *L) {
+    int center_x = (int)luaL_checknumber(L, 1);
+    int center_y = (int)luaL_checknumber(L, 2);
+    int radius = (int)luaL_checknumber(L, 3);
+    int color = (int)luaL_checknumber(L, 4);
+
+    CircleItem circle = {
+        .center_x = center_x, .center_y = center_y, .radius = radius,
+        .filled = false, .color_index = color,
+        .has_border = true, .border_color_index = color,
+    };
+    draw_circle(&circle);
+
+    return 0;
+}
+
+//----------------------------------------------------------------------------------
 // ui.circfill(x, y, radius, color)
 //----------------------------------------------------------------------------------
 int lua_circfill(lua_State *L) {
@@ -727,6 +746,9 @@ void lua_api_init(void) {
 
     lua_pushcfunction(globalLuaState, lua_draw_circle);
     lua_setfield(globalLuaState, -2, "draw_circle");
+
+    lua_pushcfunction(globalLuaState, lua_circ);
+    lua_setfield(globalLuaState, -2, "circ");
 
     lua_pushcfunction(globalLuaState, lua_circfill);
     lua_setfield(globalLuaState, -2, "circfill");
