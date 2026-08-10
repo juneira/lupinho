@@ -70,7 +70,7 @@ The manifest bitmap format per line: `<id> <size> <path> <json>` where json incl
 
 All drawing APIs are exposed under the `ui` global table:
 
-**Shapes:** `ui.rect`, `ui.rectfill`, `ui.draw_rect`, `ui.circfill`, `ui.draw_circle`, `ui.trisfill`, `ui.draw_line`
+**Shapes:** `ui.rect`, `ui.rectfill`, `ui.draw_rect`, `ui.circ`, `ui.circfill`, `ui.draw_circle`, `ui.trisfill`, `ui.draw_line`
 
 **Sprites/Tiles:** `ui.spr(spritesheet_table, x, y, [flipped])`, `ui.tile(spritesheet_table, tile_index, x, y)` — tile_index bit 10 (1024) triggers horizontal flip.
 
