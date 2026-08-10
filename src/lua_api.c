@@ -797,22 +797,22 @@ void lua_api_init(void) {
     lua_setglobal(globalLuaState, "DOWN");
 
     lua_pushinteger(globalLuaState, GAMEPAD_BUTTON_RIGHT_FACE_RIGHT);
-    lua_setglobal(globalLuaState, "BTN_Z");
+    lua_setglobal(globalLuaState, "BTN_A");
 
     lua_pushinteger(globalLuaState, GAMEPAD_BUTTON_RIGHT_FACE_LEFT);
-    lua_setglobal(globalLuaState, "BTN_E");
+    lua_setglobal(globalLuaState, "BTN_Y");
 
     lua_pushinteger(globalLuaState, GAMEPAD_BUTTON_RIGHT_FACE_UP);
-    lua_setglobal(globalLuaState, "BTN_Q");
+    lua_setglobal(globalLuaState, "BTN_X");
 
     lua_pushinteger(globalLuaState, GAMEPAD_BUTTON_RIGHT_FACE_DOWN);
-    lua_setglobal(globalLuaState, "BTN_Z");
+    lua_setglobal(globalLuaState, "BTN_B");
 
     lua_pushinteger(globalLuaState, GAMEPAD_BUTTON_LEFT_TRIGGER_1);
-    lua_setglobal(globalLuaState, "BTN_F");
+    lua_setglobal(globalLuaState, "TRG_LEFT");
 
     lua_pushinteger(globalLuaState, GAMEPAD_BUTTON_RIGHT_TRIGGER_1);
-    lua_setglobal(globalLuaState, "BTN_G");
+    lua_setglobal(globalLuaState, "TRG_RIGHT");
 }
 
 //----------------------------------------------------------------------------------
